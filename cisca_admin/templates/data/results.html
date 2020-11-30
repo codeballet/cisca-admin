@@ -9,16 +9,22 @@
         <thead>
             <tr>
                 <th scope="col">Picture</th>
+                <th scope="col">Nickname</th>
                 <th scope="col">First</th>
-                <th scope="col">Last</th>
+                <th scope="col">Middle</th>
+                <th scope="col">Family</th>
+                <th scope="col">Birthdate</th>
             </tr>
         </thead>
         <tbody>
             {% for row in query %}
                 <tr>
                     <td>Image</td>
+                    <td>{{ row.nickname.capitalize() }}</td>
                     <td>{{ row.first_name.capitalize() }}</td>
-                    <td>Lastname</td>
+                    <td>{{ row.middle_name.capitalize() }}</td>
+                    <td>{{ row.family_name.capitalize() }}</td>
+                    <td>{{ row.birth.birth_year }}-{{ row.birth.birth_month }}-{{ row.birth.birth_day }}</td>
                 </tr>
             {% endfor %}
         </tbody>
