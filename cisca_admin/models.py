@@ -42,7 +42,7 @@ class Person(Base):
         self.nickname = nickname
 
     def __repr__(self):
-        return f'<Person {self.first_name}, {self.last_name}'
+        return f'<Person {self.first_name}, {self.family_name}>'
 
 
 class User(Base):

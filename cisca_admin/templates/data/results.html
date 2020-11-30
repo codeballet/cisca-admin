@@ -14,6 +14,7 @@
                 <th scope="col">Middle</th>
                 <th scope="col">Family</th>
                 <th scope="col">Birthdate</th>
+                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +26,7 @@
                     <td>{{ row.middle_name.capitalize() }}</td>
                     <td>{{ row.family_name.capitalize() }}</td>
                     <td>{{ row.birth.birth_year }}-{{ row.birth.birth_month }}-{{ row.birth.birth_day }}</td>
+                    <td><a href="{{ url_for('index.edit', person_id=row.person_id) }}">Edit</a></td>
                 </tr>
             {% endfor %}
         </tbody>
