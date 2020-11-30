@@ -1,5 +1,4 @@
 import functools
-
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
@@ -18,7 +17,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = User.query.filter(User.id == user_id).first()
+        g.user = User.query.filter(User.user_id == user_id).first()
 
 
 def login_required(view):
@@ -35,23 +34,23 @@ def login_required(view):
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        error = None
+        username = request.form.get('username')
+        password = request.form.get('password')
+        message = None
 
         user = User.query.filter(User.username == username).first()
 
         if user is None:
-            error = 'Incorrect username'
+            message = 'Incorrect username.'
         elif not check_password_hash(user.password, password):
-            error = 'Incorrect password'
+            message = 'Incorrect password.'
 
-        if error is None:
+        if message is None:
             session.clear()
-            session['user_id'] = user.id
-            return redirect(url_for('index'))
+            session['user_id'] = user.user_id
+            return redirect(url_for('index.index'))
 
-        flash(error)
+        flash(message)
 
     return render_template('auth/login.html')
 
@@ -59,26 +58,30 @@ def login():
 @bp.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('index'))
+    return redirect(url_for('index.index'))
 
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        error = None
+        username = request.form.get('reg_username')
+        password = request.form.get('reg_password')
+        message = None
 
         if not username:
-            error = 'Username is required'
+            message = 'Username is required.'
+
         if not password:
-            error = 'Password is required'
+            message = 'Password is required.'
 
-        user = User.query.filter(User.username == username)
-        if user.first() is not None:
-            error = f'User {username} is already registered'
+        if password != request.form.get('confirm'):
+            message = 'Passwords do not match.'
 
-        if error is None:
+        query = User.query.filter(User.username == username)
+        if query.first() is not None:
+            message = f'User {username} is already registered'
+
+        if message is None:
             new_user = User(username=username,
                             password=generate_password_hash(password))
             db_session.add(new_user)
@@ -86,6 +89,6 @@ def register():
 
             return redirect(url_for('auth.login'))
 
-        flash(error)
+        flash(message)
 
     return render_template('auth/register.html')

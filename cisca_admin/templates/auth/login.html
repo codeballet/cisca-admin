@@ -1,15 +1,18 @@
 {% extends 'layout.html' %}
 
-{% block header %}
-  <h1>{% block title %}Log In{% endblock %}</h1>
+{% block title %}
+  Log in
 {% endblock %}
 
-{% block content %}
-  <form method="post">
-    <label for="username">Username</label>
-    <input name="username" id="username" required>
-    <label for="password">Password</label>
-    <input type="password" name="password" id="password" required>
-    <input type="submit" value="Log In">
+{% block main %}
+  <h4>Log in</h4>
+  <form action="{{ url_for('auth.login') }}" method="POST">
+    <div class="form-group">
+      <input autocomplete="off" autofocus type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+    </div>
+    <div class="form-group">
+      <input autocomplete="off" type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Log in</button>
   </form>
 {% endblock %}

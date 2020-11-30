@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Create
+{% endblock %}
+
+{% block main %}
+    <h5>Create new person</h5>
+    <form action="{{ url_for('index.create') }}" method="POST">
+        <div class="form-group">
+            <input autocomplete="off" autofocus type="text" class="form-control" id="first_name" name="first_name" placeholder="First name (required)" required>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Middle name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="family_name" name="family_name" placeholder="Family name (required)" required>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="nickname" name="nickname" placeholder="Nickname">
+        </div>
+
+        <h6>Date of birth</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="birth_year" name="birth_year" placeholder="Year">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="birth_month" name="birth_month" placeholder="Month">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="birth_day" name="birth_day" placeholder="Day">
+        </div>
+        <button class="btn btn-primary" type="submit">Create</button>
+    </form>
+{% endblock %}

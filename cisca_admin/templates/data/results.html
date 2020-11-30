@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block main %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Picture</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in query %}
+                <tr>
+                    <td>Image</td>
+                    <td>{{ row.first_name.capitalize() }}</td>
+                    <td>Lastname</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
