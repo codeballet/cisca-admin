@@ -9,9 +9,9 @@ class Birth(Base):
     __tablename__ = 'births'
     person_id = Column(Integer, ForeignKey(
         'people.person_id'), primary_key=True)
-    birth_year = Column(Integer, nullable=False)
-    birth_month = Column(Integer, nullable=False)
-    birth_day = Column(Integer, nullable=False)
+    birth_year = Column(String(4), nullable=False)
+    birth_month = Column(String(2), nullable=False)
+    birth_day = Column(String(2), nullable=False)
     person = relationship("Person", back_populates="birth")
 
     def __init__(self, birth_year=None, birth_month=None, birth_day=None):

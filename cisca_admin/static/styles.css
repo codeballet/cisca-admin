@@ -3,6 +3,14 @@ nav .navbar-brand {
   font-size: xx-large;
 }
 
+main .custom-select {
+  /* center custom selects */
+  display: inline-block;
+
+  /* override Bootstrap's 100% width for custom selects */
+  max-width: 18rem;
+}
+
 main .form-control {
   /* center form controls */
   display: inline-block;

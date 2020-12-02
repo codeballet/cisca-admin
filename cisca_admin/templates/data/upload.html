@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Upload
+{% endblock %}
+
+{% block main %}
+    <h5>Upload an image for {{ first_name }}</h5>
+    <form action="{{ url_for('index.upload') }}" method=post enctype=multipart/form-data>
+        <input type=file name=file>
+        <input type=submit value=Upload>
+    </form>
+    <a class="btn btn-primary" href="{{ url_for('index.index') }}" role="button">No thank you!</a>
+{% endblock %}
