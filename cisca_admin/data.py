@@ -1,8 +1,10 @@
 import os
+import PIL
 
 from flask import (
     Blueprint, current_app, flash, g, redirect, render_template, request, session, url_for
 )
+
 from sqlalchemy import and_
 from sqlalchemy.orm import selectinload
 
@@ -10,8 +12,8 @@ from werkzeug.utils import secure_filename
 
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
-from cisca_admin.models import Birth, Person, User
-from cisca_admin.helpers import allowed_file
+from cisca_admin.models import Birth, Image, Person, User
+from cisca_admin.helpers import allowed_file, create_thumbnail
 
 bp = Blueprint('index', __name__)
 
@@ -53,7 +55,6 @@ def create():
             Person.family_name == family_name))
 
         if query.first() is not None:
-            print(f'All responses: {query.all()}')
             message = f'I already have a person named {first_name.capitalize()} {last_name.capitalize()}. Are you sure you want to create another one?'
 
         if message is None:
@@ -76,6 +77,7 @@ def create():
 def edit():
     if request.method == 'POST':
         person_id = request.args.get('person_id')
+        print(f'person_id in edit view: {person_id}')
         nickname = request.form.get('nickname').lower()
         first_name = request.form.get('first_name').lower()
         middle_name = request.form.get('middle_name').lower()
@@ -134,7 +136,7 @@ def edit():
 
     person_id = request.args.get('person_id')
     query = Person.query.options(selectinload(Person.birth)).filter(
-        Person.person_id == person_id).one()
+        Person.person_id == person_id).first()
     return render_template('data/edit.html', query=query)
 
 
@@ -145,16 +147,17 @@ def find():
     message = None
 
     if request.form.get('nickname'):
-        query = Person.query.filter(
-            Person.nickname == request.form.get('nickname').lower())
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(
+            Person.image)).filter(Person.nickname == request.form.get('nickname').lower())
     elif request.form.get('first_name'):
-        query = Person.query.filter(
-            Person.first_name == request.form.get('first_name').lower())
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(
+            Person.image)).filter(Person.first_name == request.form.get('first_name').lower())
     elif request.form.get('first_last_name'):
-        query = Person.query.filter(and_(
-            Person.first_name == request.form.get('first_name').lower(),
-            Person.last_name == request.form.get('last_name').lower()
-        ))
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).\
+            filter(and_(
+                Person.first_name == request.form.get('first_name').lower(),
+                Person.last_name == request.form.get('last_name').lower()
+            ))
     else:
         message = 'You have to fill in all the search fields.'
 
@@ -168,22 +171,58 @@ def find():
     return redirect(url_for('index.index'))
 
 
-@bp.route('/upload', methods=('POST',))
+@bp.route('/upload', methods=('GET', 'POST'))
 @login_required
 def upload():
+    if request.method == 'POST':
+        person_id = request.args.get('person_id')
+
+        file = request.files.get('file')
+        message = 'No image uploaded.'
+
+        if file and file.filename == '':
+            message = 'Please select an image file.'
+        elif file and not allowed_file(file.filename):
+            message = 'Please select a "jpg", "jpeg", or "png" image file.'
+        elif file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            filename_list = filename.split('.')
+            filename_list[0] = person_id
+            filename_list[1] = filename_list[1].lower()
+            filename = '.'.join(map(str, filename_list))
+            file.save(os.path.join(
+                current_app.config['UPLOAD_FOLDER'], filename))
+
+            # Generate thumbnail
+            size = (128, 128)
+
+            with open(f"{os.path.join(current_app.config['UPLOAD_FOLDER'], filename)}") as infile:
+                infile_str = str(infile.name)
+
+                try:
+                    with PIL.Image.open(infile_str) as im:
+                        im.thumbnail(size)
+                        im.save(infile_str, "JPEG")
+
+                        # Commit thumbnail to images table
+                        new_image = Image(
+                            image_file=filename, person_id=person_id)
+                        db_session.add(new_image)
+                        db_session.commit()
+
+                except OSError:
+                    print(f'cannot create thumbnail for {infile_str}')
+
+            query = Person.query.filter(
+                Person.person_id == person_id).first()
+
+            flash(
+                f'Image for {query.first_name.capitalize()} {query.family_name.capitalize()} is saved.')
+            return redirect(url_for('index.index'))
+
+        flash(message)
+        return render_template('data/upload.index')
+
     person_id = request.args.get('person_id')
-    file = request.files.get('file')
-    message = 'No image uploaded.'
-
-    if file and file.filename == '':
-        message = 'Please select an image file.'
-    elif file and not allowed_file(file.filename):
-        message = 'Please select a "jpg", "jpeg", or "png" image file.'
-    elif file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(
-            current_app.config['UPLOAD_FOLDER'], filename))
-        message = f'Image for {filename} is saved.'
-
-    flash(message)
-    return render_template('data/create.index')
+    query = Person.query.filter(Person.person_id == person_id).first()
+    return render_template('data/upload.html', query=query)

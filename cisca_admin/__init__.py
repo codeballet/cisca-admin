@@ -14,7 +14,7 @@ def create_app(test_config=None):
         SESSION_TYPE='filesystem',
         SESSION_PERMANENT=False,
         TEMPLATES_AUTO_RELOAD=True,
-        UPLOAD_FOLDER=os.path.join(app.instance_path, 'images')
+        UPLOAD_FOLDER=os.path.abspath('cisca_admin/static/images')
     )
 
     if test_config is None:

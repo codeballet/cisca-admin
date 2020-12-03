@@ -17,10 +17,27 @@ class Birth(Base):
     def __init__(self, birth_year=None, birth_month=None, birth_day=None):
         self.birth_year = birth_year
         self.birth_month = birth_month
-        self.birth_day = birth_month
+        self.birth_day = birth_day
 
     def __repr__(self):
         return f'<Birth {self.birth_year}-{self.birth_month}-{self.birth_day}>'
+
+
+class Image(Base):
+    query = db_session.query_property()
+
+    __tablename__ = 'images'
+    image_id = Column(Integer, primary_key=True)
+    image_file = Column(String(10), unique=True, nullable=False)
+    person_id = Column(Integer, ForeignKey('people.person_id'))
+    person = relationship("Person", back_populates="image")
+
+    def __init__(self, image_file=None, person_id=None):
+        self.image_file = image_file
+        self.person_id = person_id
+
+    def __repr__(self):
+        return f'<Image {self.image_file}>'
 
 
 class Person(Base):
@@ -33,6 +50,8 @@ class Person(Base):
     family_name = Column(String(50), nullable=False)
     nickname = Column(String(50))
     birth = relationship("Birth", uselist=False,
+                         back_populates="person", cascade="all, delete, delete-orphan")
+    image = relationship("Image", uselist=False,
                          back_populates="person", cascade="all, delete, delete-orphan")
 
     def __init__(self, first_name=None, middle_name=None, family_name=None, nickname=None):

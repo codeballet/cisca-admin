@@ -3,6 +3,15 @@ nav .navbar-brand {
   font-size: xx-large;
 }
 
+main .custom-file {
+  display: inline-block;
+  max-width: 20rem;
+}
+
+main .custom-file-label {
+  text-align: left;
+}
+
 main .custom-select {
   /* center custom selects */
   display: inline-block;

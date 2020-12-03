@@ -20,7 +20,9 @@
         <tbody>
             {% for row in query %}
                 <tr>
-                    <td>Image</td>
+                    <td><img src="../../static/images/{{ row.image.image_file }}" alt="image thumbnail"></td>
+                    <!-- <td><a href="{{ url_for('index.upload', person_id=row.person_id) }}">Upload image</a></td> -->
+                    <!-- <td>{{ row.image.image_file }}</td> -->
                     <td>{{ row.nickname.capitalize() }}</td>
                     <td>{{ row.first_name.capitalize() }}</td>
                     <td>{{ row.middle_name.capitalize() }}</td>

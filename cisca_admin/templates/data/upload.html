@@ -5,10 +5,22 @@
 {% endblock %}
 
 {% block main %}
-    <h5>Upload an image for {{ first_name }}</h5>
-    <form action="{{ url_for('index.upload') }}" method=post enctype=multipart/form-data>
-        <input type=file name=file>
-        <input type=submit value=Upload>
+    <h5>Upload an image for {{ query.first_name.capitalize() }} {{ query.family_name.capitalize() }}</h5>
+    <form action="{{ url_for('index.upload', person_id = query.person_id) }}" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <div class="custom-file">
+                <input type=file class="custom-file-input" name=file id="file">
+                <label class="custom-file-label" for="image">Select image...</label>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
     </form>
-    <a class="btn btn-primary" href="{{ url_for('index.index') }}" role="button">No thank you!</a>
+
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change',function(e){
+            let fileName = document.getElementById("file").files[0].name;
+            let nextSibling = e.target.nextElementSibling
+            nextSibling.innerText = fileName
+        })
+    </script>
 {% endblock %}
