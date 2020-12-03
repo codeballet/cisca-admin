@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
 from cisca_admin.models import Birth, Image, Person, User
-from cisca_admin.helpers import allowed_file, create_thumbnail
+from cisca_admin.helpers import allowed_file
 
 bp = Blueprint('index', __name__)
 
@@ -180,20 +180,33 @@ def upload():
         file = request.files.get('file')
         message = 'No image uploaded.'
 
+        # Check if a file is submitted
         if file and file.filename == '':
             message = 'Please select an image file.'
+        # Check if jpg or png file
         elif file and not allowed_file(file.filename):
             message = 'Please select a "jpg", "jpeg", or "png" image file.'
+        # Secure the filename and save
         elif file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             filename_list = filename.split('.')
             filename_list[0] = person_id
             filename_list[1] = filename_list[1].lower()
             filename = '.'.join(map(str, filename_list))
+
+            # Check if person already has an image
+            query = Person.query.options(selectinload(
+                Person.image)).filter(Person.person_id).first()
+            if query.image:
+                # Return to index page
+                flash(
+                    f'{Person.first_name} {Person.last_name} already has an image.')
+                return redirect(url_for(index.index))
+
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'], filename))
 
-            # Generate thumbnail
+            # Convert image file to thumbnail
             size = (128, 128)
 
             with open(f"{os.path.join(current_app.config['UPLOAD_FOLDER'], filename)}") as infile:
