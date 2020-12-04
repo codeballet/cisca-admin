@@ -7,8 +7,9 @@ class Birth(Base):
     query = db_session.query_property()
 
     __tablename__ = 'births'
-    person_id = Column(Integer, ForeignKey(
-        'people.person_id'), primary_key=True)
+    person_id = Column(Integer,
+                       ForeignKey('people.person_id', ondelete="CASCADE"),
+                       primary_key=True)
     birth_year = Column(String(4), nullable=False)
     birth_month = Column(String(2), nullable=False)
     birth_day = Column(String(2), nullable=False)
@@ -29,7 +30,8 @@ class Image(Base):
     __tablename__ = 'images'
     image_id = Column(Integer, primary_key=True)
     image_file = Column(String(10), unique=True, nullable=False)
-    person_id = Column(Integer, ForeignKey('people.person_id'))
+    person_id = Column(Integer,
+                       ForeignKey('people.person_id', ondelete="CASCADE"))
     person = relationship("Person", back_populates="image")
 
     def __init__(self, image_file=None, person_id=None):
@@ -49,10 +51,16 @@ class Person(Base):
     middle_name = Column(String(50))
     family_name = Column(String(50), nullable=False)
     nickname = Column(String(50))
-    birth = relationship("Birth", uselist=False,
-                         back_populates="person", cascade="all, delete, delete-orphan")
-    image = relationship("Image", uselist=False,
-                         back_populates="person", cascade="all, delete, delete-orphan")
+    birth = relationship(
+        "Birth", uselist=False,
+        back_populates="person",
+        cascade="all, delete, delete-orphan",
+        passive_deletes=True)
+    image = relationship(
+        "Image", uselist=False,
+        back_populates="person",
+        cascade="all, delete, delete-orphan",
+        passive_deletes=True)
 
     def __init__(self, first_name=None, middle_name=None, family_name=None, nickname=None):
         self.first_name = first_name
@@ -71,10 +79,12 @@ class User(Base):
     user_id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String, unique=True, nullable=False)
+    priviledge = Column(Integer, nullable=False, default=0)
 
-    def __init__(self, username=None, password=None):
+    def __init__(self, username=None, password=None, priviledge=None):
         self.username = username
         self.password = password
+        self.priviledge = priviledge
 
     def __repr__(self):
         return f'<User {self.username}>'

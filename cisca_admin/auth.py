@@ -1,6 +1,6 @@
 import functools
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for
+    Blueprint, current_app, flash, g, redirect, render_template, request, session, url_for
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -45,9 +45,10 @@ def login():
         elif not check_password_hash(user.password, password):
             message = 'Incorrect password.'
 
-        if message is None:
+        elif message is None:
             session.clear()
             session['user_id'] = user.user_id
+
             return redirect(url_for('index.index'))
 
         flash(message)
@@ -62,10 +63,12 @@ def logout():
 
 
 @bp.route('/register', methods=('GET', 'POST'))
+@login_required
 def register():
     if request.method == 'POST':
         username = request.form.get('reg_username')
         password = request.form.get('reg_password')
+        priviledge = request.form.get('reg_priviledge')
         message = None
 
         if not username:
@@ -83,7 +86,8 @@ def register():
 
         if message is None:
             new_user = User(username=username,
-                            password=generate_password_hash(password))
+                            password=generate_password_hash(password),
+                            priviledge=priviledge)
             db_session.add(new_user)
             db_session.commit()
 
@@ -91,4 +95,13 @@ def register():
 
         flash(message)
 
-    return render_template('auth/register.html')
+    return render_template('auth/register.html', levels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+
+@bp.route('/settings', methods=('GET', 'POST'))
+@login_required
+def settings():
+    if request.method == 'POST':
+        return 'TODO'
+
+    return render_template('auth/settings.html')

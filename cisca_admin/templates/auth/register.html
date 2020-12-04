@@ -5,31 +5,47 @@
 {% endblock %}
 
 {% block main %}
-    <h4>Register</h4>
-    <form action="{{ url_for('auth.register') }}" method="POST">
-        <div class="form-group">
-            <input autocomplete="off" autofocus type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username" required>
-        </div>
-        <div class="form-group">
-            <input autocomplete="off" type="password" class="form-control" id="reg_password" name="reg_password" placeholder="Password" required>
-        </div>
-        <div class="form-group">
-            <input autocomplete="off" type="password" class="form-control" id="confirm" name="confirm" placeholder="Confirm password" required>
-        </div>
-        <p id="confirm_warning">Passwords do not match!</p>
-        <button class="btn btn-primary" type="submit">Register</button>
-    </form>
+    {% if g.user.priviledge == 9 %}
+        <h4>Register</h4>
+        <form action="{{ url_for('auth.register') }}" method="POST">
+            <div class="form-group">
+                <input autocomplete="off" autofocus type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input autocomplete="off" type="password" class="form-control" id="reg_password" name="reg_password" placeholder="Password" required>
+            </div>
+            <div class="form-group">
+                <input autocomplete="off" type="password" class="form-control" id="confirm" name="confirm" placeholder="Confirm password" required>
+            </div>
+            <p id="confirm_warning">Passwords do not match!</p>
 
-    <script>
-        document.querySelector('#confirm').onkeyup = function() {
-            let first = document.querySelector('#reg_password').value;
-            let second = document.querySelector('#confirm').value;
+            <div class="form-group">
+                <select name="reg_priviledge" class="custom-select narrow-select">
+                    <option selected>Priviledge...</option>
+                    {% for level in levels %}
+                        <option value="{{ level }}">{{ level }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            if (first != second && second != '') {
-                document.querySelector('#confirm_warning').style.display = "block";
-            } else {
-                document.querySelector('#confirm_warning').style.display = "none";
+            <div>
+                <button class="btn btn-primary" type="submit">Register</button>
+            </div>
+        </form>
+
+        <script>
+            document.querySelector('#confirm').onkeyup = function() {
+                let first = document.querySelector('#reg_password').value;
+                let second = document.querySelector('#confirm').value;
+
+                if (first != second && second != '') {
+                    document.querySelector('#confirm_warning').style.display = "block";
+                } else {
+                    document.querySelector('#confirm_warning').style.display = "none";
+                }
             }
-        }
-    </script>
+        </script>
+    {% else %}
+        <h4>This is not the page you are looking for!</h4>
+    {% endif %}
 {% endblock %}

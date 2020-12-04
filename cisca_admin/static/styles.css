@@ -28,6 +28,10 @@ main .form-control {
   width: auto;
 }
 
+main .narrow-select {
+  max-width: 10rem;
+}
+
 main {
   /* scroll horizontally as needed */
   overflow-x: auto;
@@ -44,4 +48,12 @@ main img {
 #confirm_warning {
   display: none;
   color: red;
+}
+
+#everyone {
+  display: none;
+}
+
+#search_term {
+  font-weight: bold;
 }

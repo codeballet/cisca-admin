@@ -8,10 +8,10 @@
     <form action="{{ url_for('index.index') }}" method="POST">
         <div class="form-group">
             <select name="criteria" class="custom-select">
-                <option selected>Choose search terms</option>
-                <option value="nickname">Nickname</option>
-                <option value="first_name">First name</option>
-                <option value="first_last_name">First and last name</option>
+                <option id="search_term" selected>Choose search term...</option>
+                {% for criteria in search_criteria %}
+                    <option value="{{ criteria }}">{{ criteria }}</option>
+                {% endfor %}
             </select>
         </div>
         <button class="btn btn-primary" type="submit">Go</button>

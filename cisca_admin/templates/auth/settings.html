@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Settings
+{% endblock %}
+
+{% block main %}
+    <h5>Change password</h5>
+    <form action="{{ url_for('auth.settings') }}" method="post">
+        <div class="form-group">
+            <input autocomplete="on" autofocus class="form-control" name="old_password" placeholder="Old password" type="password">
+        </div>
+        <div class="form-group">
+            <input id="new_password" autocomplete="off" class="form-control" name="new_password" placeholder="New password" type="password">
+        </div>
+        <div class="form-group">
+            <input id="confirm_new_password" autocomplete="off" class="form-control" name="confirm_new_password" placeholder="Confirm new password" type="password">
+        </div>
+        <p class="password_warning">Passwords do not match!</p>
+        <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.querySelector('#confirm_new_password').onkeyup = function() {
+            let first = document.querySelector('#new_password').value;
+            let second = document.querySelector('#confirm_new_password').value;
+
+            if (first != second && second != '') {
+                document.querySelector('.password_warning').style.display = "block";
+            } else {
+                document.querySelector('.password_warning').style.display = "none";
+            }
+        }
+    </script>
+{% endblock %}

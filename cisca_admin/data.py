@@ -17,14 +17,18 @@ from cisca_admin.helpers import allowed_file
 
 bp = Blueprint('index', __name__)
 
+SEARCH_CRITERIA = ['Nickname', 'First name', 'Family name',
+                   'First and family name', 'Find everyone!']
+
 
 @bp.route('/', methods=('GET', 'POST'))
 @login_required
 def index():
     if request.method == 'POST':
-        return render_template('data/find.html', criteria=request.form.get('criteria'))
+        criteria = request.form.get('criteria')
+        return render_template('data/find.html', criteria=criteria, search_criteria=SEARCH_CRITERIA)
 
-    return render_template('data/index.html')
+    return render_template('data/index.html', search_criteria=SEARCH_CRITERIA)
 
 
 @bp.route('/create', methods=('GET', 'POST'))
@@ -152,12 +156,19 @@ def find():
     elif request.form.get('first_name'):
         query = Person.query.options(selectinload(Person.birth)).options(selectinload(
             Person.image)).filter(Person.first_name == request.form.get('first_name').lower())
-    elif request.form.get('first_last_name'):
+    elif request.form.get('family_name'):
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(
+            Person.image)).filter(Person.family_name == request.form.get('family_name').lower())
+    elif request.form.get('first_name') and request.form.get('family_name'):
         query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).\
             filter(and_(
-                Person.first_name == request.form.get('first_name').lower(),
-                Person.last_name == request.form.get('last_name').lower()
+                Person.first_name == request.form.get(
+                    'first_name').lower(),
+                Person.family_name == request.form.get('last_name').lower()
             ))
+    elif request.form.get('everyone'):
+        query = Person.query.options(selectinload(
+            Person.birth)).options(selectinload(Person.image))
     else:
         message = 'You have to fill in all the search fields.'
 

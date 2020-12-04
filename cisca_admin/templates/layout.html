@@ -31,15 +31,20 @@
               </li>
             </ul>
             <ul class="navbar-nav ml-auto mt-2">
+              {% if g.user.priviledge == 9 %}
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('auth.register') }}">Admin</a>
+                </li>
+              {% endif %}
+              <li>
+                <a class="nav-link" href="{{ url_for('auth.settings') }}">Settings</a>
+              </li>
               <li>
                 <a class="nav-link" href="{{ url_for('auth.logout') }}">Log Out</a>
               </li>
             </ul>
           {% else %}
             <ul class="navbar-nav ml-auto mt-2">
-              <li class="nav-item">
-                <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
-              </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('auth.login') }}">Log In</a>
               </li>
@@ -63,9 +68,12 @@
         {% block main %}{% endblock %}
       </main>
 
-      <footer class="small text-center text-muted">
-        All data is confidential and should not be disclosed to any person or entity outside of CISCA.
-      </footer>
+      {% if g.user %}
+        <footer class="small text-center text-muted">
+          All data is confidential and should not be disclosed to any person or entity outside of CISCA.
+        </footer>
+      {% endif %}
+
     </div>
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
