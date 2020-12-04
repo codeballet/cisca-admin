@@ -45,12 +45,12 @@ main img {
   max-width: 100%;
 }
 
-#confirm_warning {
+.confirm_warning {
   display: none;
   color: red;
 }
 
-#everyone {
+.find-everyone {
   display: none;
 }
 

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Delete
+{% endblock %}
+
+{% block main %}
+    {% if g.user.priviledge >= 9 %}
+        <h5>Are you sure you want to delete user "{{ user.username }}"?</h5>
+        <form action="{{ url_for('admin.delete', user_id=user.user_id) }}" method="POST">
+            <div class="form-group">
+                <button class="btn btn-danger" type="submit">Yes Delete</button>
+            </div>
+        </form>
+        <div>
+            <a href="{{ url_for('admin.users', method='GET') }}" class="btn btn-primary" role="button">No Cancel</a>
+        </div>
+    {% else %}
+        <h4>This is not the page you are looking for!</h4>
+    {% endif %}
+{% endblock %}

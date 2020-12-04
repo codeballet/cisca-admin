@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Users
+{% endblock %}
+
+{% block main %}
+    {% if g.user.priviledge >= 9 %}
+        <div class="form-group">
+            <a href="{{ url_for('admin.register', method='GET') }}" class="btn btn-primary" role="button">Add new user</a>
+        </div>
+
+        <h5>Existing users</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Username</th>
+                    <th scope="col">User ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td><a href="{{ url_for('admin.user', user_id=user.user_id) }}">{{ user.username }}</a></td>
+                        <td>{{ user.user_id }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <h4>This is not the page you are looking for!</h4>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    User
+{% endblock %}
+
+{% block main %}
+    {% if g.user.priviledge >= 9 %}
+        <h5>Edit "{{ user.username }}"</h5>
+        <form action="{{ url_for('admin.user', user_id=user.user_id) }}" method="POST">
+            <div class="form-group">
+                <input autocomplete="off" type="text" class="form-control" name="username" value="{{ user.username }}" placeholder="username" required>
+            </div>
+            <div class="form-group">
+                <input id="new_password" autocomplete="off" class="form-control" name="new_password" placeholder="New password" type="password" required>
+            </div>
+            <div class="form-group">
+                <input id="confirm_new_password" autocomplete="off" class="form-control" name="confirm_new_password" placeholder="Confirm new password" type="password" required>
+            </div>
+            <p class="confirm_warning">Passwords do not match!</p>
+
+            <button class="btn btn-primary" type="submit">Update</button>
+            <a href="{{ url_for('admin.delete', user_id=user.user_id) }}" class="btn btn-danger" role="button">Delete</a>
+        </form>
+
+        <script>
+            document.querySelector('#confirm_new_password').onkeyup = function() {
+                let first = document.querySelector('#new_password').value;
+                let second = document.querySelector('#confirm_new_password').value;
+
+                if (first != second && second != '') {
+                    document.querySelector('.confirm_warning').style.display = "block";
+                } else {
+                    document.querySelector('.confirm_warning').style.display = "none";
+                }
+            }
+        </script>
+    {% else %}
+        <h4>This is not the page you are looking for!</h4>
+    {% endif %}
+{% endblock %}

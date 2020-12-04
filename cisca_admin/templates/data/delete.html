@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Delete
+{% endblock %}
+
+{% block main %}
+    <h5>Are you sure you want to delete {{ person.first_name.capitalize() }} {{ person.family_name.capitalize() }}?</h5>
+    <form action="{{ url_for('index.delete', person_id=person.person_id) }}" method="POST">
+        <div class="form-group">
+            <button class="btn btn-danger" type="submit">Yes Delete</button>
+        </div>
+    </form>
+    <div>
+        <a href="{{ url_for('index.index', person_id=person.person_id) }}" class="btn btn-primary" role="button">No Cancel</a>
+    </div>
+{% endblock %}

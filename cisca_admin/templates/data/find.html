@@ -5,9 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    {% if criteria != search_criteria[4] %}
-        <h5>Enter your search term</h5>
-    {% endif %}
+    <h5>Enter your search term</h5>
     <form action="{{ url_for('index.find') }}" method="POST">
         {% if criteria == search_criteria[0] %}
             <div class="form-group">
@@ -28,14 +26,7 @@
             <div class="form-group">
                 <input autocomplete="off" type="text" class="form-control" name="family_name" placeholder="Family name" required>
             </div>
-        {% elif criteria == search_criteria[4] %}
-            <div class="form-group">
-                <input id="everyone" name="everyone" value="everyone">
-                <button class="btn btn-primary" type="submit">Just get me everyone!</button>
-            </div>
         {% endif %}
-        {% if criteria != search_criteria[4] %}
-            <button class="btn btn-primary" type="submit">Find</button>
-        {% endif %}
+        <button class="btn btn-primary" type="submit">Find</button>
     </form>
 {% endblock %}

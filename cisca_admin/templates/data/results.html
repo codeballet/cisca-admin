@@ -14,23 +14,21 @@
                 <th scope="col">Middle</th>
                 <th scope="col">Family</th>
                 <th scope="col">Birthdate</th>
-                <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
             {% for row in query %}
                 <tr>
-                    {% if row.image.image_file %}
-                        <td><img src="../../static/images/{{ row.image.image_file }}" alt="image thumbnail"></td>
+                    {% if row.image %}
+                        <td><a href="{{ url_for('index.edit', person_id=row.person_id) }}"><img src="../../static/images/{{ row.image.image_file }}" alt="image thumbnail"></a></td>
                     {% else %}
                         <td><a href="{{ url_for('index.upload', person_id=row.person_id) }}">Upload</a></td>
                     {% endif %}
                     <td>{{ row.nickname.capitalize() }}</td>
-                    <td>{{ row.first_name.capitalize() }}</td>
+                    <td><a href="{{ url_for('index.edit', person_id=row.person_id) }}">{{ row.first_name.capitalize() }}</a></td>
                     <td>{{ row.middle_name.capitalize() }}</td>
-                    <td>{{ row.family_name.capitalize() }}</td>
+                    <td><a href="{{ url_for('index.edit', person_id=row.person_id) }}">{{ row.family_name.capitalize() }}</a></td>
                     <td>{{ row.birth.birth_year }}-{{ row.birth.birth_month }}-{{ row.birth.birth_day }}</td>
-                    <td><a href="{{ url_for('index.edit', person_id=row.person_id) }}">Edit</a></td>
                 </tr>
             {% endfor %}
         </tbody>

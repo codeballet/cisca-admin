@@ -7,9 +7,9 @@ class Birth(Base):
     query = db_session.query_property()
 
     __tablename__ = 'births'
+    birth_id = Column(Integer, primary_key=True)
     person_id = Column(Integer,
-                       ForeignKey('people.person_id', ondelete="CASCADE"),
-                       primary_key=True)
+                       ForeignKey('people.person_id', ondelete="CASCADE"))
     birth_year = Column(String(4), nullable=False)
     birth_month = Column(String(2), nullable=False)
     birth_day = Column(String(2), nullable=False)
@@ -54,13 +54,11 @@ class Person(Base):
     birth = relationship(
         "Birth", uselist=False,
         back_populates="person",
-        cascade="all, delete, delete-orphan",
-        passive_deletes=True)
+        cascade="all, delete, delete-orphan")
     image = relationship(
         "Image", uselist=False,
         back_populates="person",
-        cascade="all, delete, delete-orphan",
-        passive_deletes=True)
+        cascade="all, delete, delete-orphan")
 
     def __init__(self, first_name=None, middle_name=None, family_name=None, nickname=None):
         self.first_name = first_name

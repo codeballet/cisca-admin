@@ -1,7 +1,9 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_session import Session
+
+from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
 from cisca_admin.db import db_session, init_db
 
@@ -47,6 +49,9 @@ def create_app(test_config=None):
 
     init_db()
 
+    from . import admin
+    app.register_blueprint(admin.bp)
+
     from . import auth
     app.register_blueprint(auth.bp)
 
@@ -55,3 +60,13 @@ def create_app(test_config=None):
     app.add_url_rule('/', endpoint='index')
 
     return app
+
+    def errorhandler(e):
+        """Handle error"""
+        if not isinstance(e, HTTPException):
+            e = InternalServerError()
+        return render_template('error/error.html', name=e.name, code=e.code)
+
+    # Listen for errors
+    for code in default_exceptions:
+        app.errorhandler(code)(errorhandler)

@@ -5,9 +5,9 @@
 {% endblock %}
 
 {% block main %}
-    {% if g.user.priviledge == 9 %}
-        <h4>Register</h4>
-        <form action="{{ url_for('auth.register') }}" method="POST">
+    {% if g.user.priviledge >= 9 %}
+        <h4>Register new user</h4>
+        <form action="{{ url_for('admin.register') }}" method="POST">
             <div class="form-group">
                 <input autocomplete="off" autofocus type="text" class="form-control" id="reg_username" name="reg_username" placeholder="Username" required>
             </div>
@@ -17,7 +17,7 @@
             <div class="form-group">
                 <input autocomplete="off" type="password" class="form-control" id="confirm" name="confirm" placeholder="Confirm password" required>
             </div>
-            <p id="confirm_warning">Passwords do not match!</p>
+            <p class="confirm_warning">Passwords do not match!</p>
 
             <div class="form-group">
                 <select name="reg_priviledge" class="custom-select narrow-select">
@@ -28,10 +28,14 @@
                 </select>
             </div>
 
-            <div>
-                <button class="btn btn-primary" type="submit">Register</button>
+            <div class="form-group">
+                <button class="btn btn-success" type="submit">Register</button>
             </div>
         </form>
+
+        <div>
+            <a href="{{ url_for('admin.users') }}" class="btn btn-primary" role="button">List all users</a>
+        </div>
 
         <script>
             document.querySelector('#confirm').onkeyup = function() {
@@ -39,9 +43,9 @@
                 let second = document.querySelector('#confirm').value;
 
                 if (first != second && second != '') {
-                    document.querySelector('#confirm_warning').style.display = "block";
+                    document.querySelector('.confirm_warning').style.display = "block";
                 } else {
-                    document.querySelector('#confirm_warning').style.display = "none";
+                    document.querySelector('.confirm_warning').style.display = "none";
                 }
             }
         </script>
