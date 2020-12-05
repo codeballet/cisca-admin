@@ -13,6 +13,7 @@ class Birth(Base):
     birth_year = Column(String(4), nullable=False)
     birth_month = Column(String(2), nullable=False)
     birth_day = Column(String(2), nullable=False)
+
     person = relationship("Person", back_populates="birth")
 
     def __init__(self, birth_year=None, birth_month=None, birth_day=None):
@@ -32,14 +33,36 @@ class Image(Base):
     image_file = Column(String(10), unique=True, nullable=False)
     person_id = Column(Integer,
                        ForeignKey('people.person_id', ondelete="CASCADE"))
+
     person = relationship("Person", back_populates="image")
 
-    def __init__(self, image_file=None, person_id=None):
+    def __init__(self, image_file=None):
         self.image_file = image_file
-        self.person_id = person_id
 
     def __repr__(self):
         return f'<Image {self.image_file}>'
+
+
+class NativeName(Base):
+    query = db_session.query_property()
+
+    __tablename__ = "native_names"
+    native_id = Column(Integer, primary_key=True)
+    native_first = Column(String(50))
+    native_middle = Column(String(50))
+    native_family = Column(String(50))
+    person_id = Column(Integer, ForeignKey(
+        'people.person_id', ondelete="CASCADE"))
+
+    person = relationship("Person", back_populates="native_name")
+
+    def __init__(self, native_first=None, native_middle=None, native_family=None):
+        self.native_first = native_first
+        self.native_middle = native_middle
+        self.native_family = native_family
+
+    def __repr__(self):
+        return f'<NativeName {self.native_first}, {self.native_middle}, {self.native_family}>'
 
 
 class Person(Base):
@@ -51,14 +74,22 @@ class Person(Base):
     middle_name = Column(String(50))
     family_name = Column(String(50), nullable=False)
     nickname = Column(String(50))
+
     birth = relationship(
         "Birth", uselist=False,
         back_populates="person",
-        cascade="all, delete, delete-orphan")
+        cascade="all, delete, delete-orphan"
+    )
     image = relationship(
         "Image", uselist=False,
         back_populates="person",
-        cascade="all, delete, delete-orphan")
+        cascade="all, delete, delete-orphan"
+    )
+    native_name = relationship(
+        "NativeName", uselist=False,
+        back_populates="person",
+        cascade="all, delete, delete-orphan"
+    )
 
     def __init__(self, first_name=None, middle_name=None, family_name=None, nickname=None):
         self.first_name = first_name

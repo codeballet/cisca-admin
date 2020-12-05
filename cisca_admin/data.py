@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
-from cisca_admin.models import Birth, Image, Person, User
+from cisca_admin.models import Birth, Image, NativeName, Person, User
 from cisca_admin.helpers import allowed_file
 
 bp = Blueprint('index', __name__)
@@ -49,6 +49,12 @@ def create():
             else request.form.get('middle_name').lower()
         family_name = '' if not request.form.get('family_name') \
             else request.form.get('family_name').lower()
+        native_first = '' if not request.form.get('native_first') \
+            else request.form.get('native_first').lower()
+        native_middle = '' if not request.form.get('native_middle') \
+            else request.form.get('native_middle').lower()
+        native_family = '' if not request.form.get('native_family') \
+            else request.form.get('native_family').lower()
         birth_year = request.form.get('birth_year')
         birth_month = request.form.get('birth_month')
         birth_day = request.form.get('birth_day')
@@ -75,12 +81,14 @@ def create():
         if message is None:
             new_person = Person(first_name=first_name, middle_name=middle_name,
                                 family_name=family_name, nickname=nickname)
+            new_person.native_name = NativeName(
+                native_first=native_first, native_middle=native_middle, native_family=native_family)
             new_person.birth = Birth(
                 birth_year=birth_year, birth_month=birth_month, birth_day=birth_day)
             db_session.add(new_person)
             db_session.commit()
 
-            message = f'{first_name.capitalize()} is created.'
+            message = f'{first_name.capitalize()} {family_name.capitalize()} is created.'
 
         flash(message)
 
@@ -251,26 +259,27 @@ def results():
     message = None
 
     if request.args.get('nickname'):
-        query = Person.query.options(selectinload(Person.birth)).options(selectinload(
-            Person.image)).filter(Person.nickname == request.args.get('nickname').lower())
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).options(
+            selectinload(Person.native_name)).filter(Person.nickname == request.args.get('nickname').lower())
     elif request.args.get('first_name'):
-        query = Person.query.options(selectinload(Person.birth)).options(selectinload(
-            Person.image)).filter(Person.first_name == request.args.get('first_name'))
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).options(
+            selectinload(Person.native_name)).filter(Person.first_name == request.args.get('first_name'))
     elif request.args.get('family_name'):
-        query = Person.query.options(selectinload(Person.birth)).options(selectinload(
-            Person.image)).filter(Person.family_name == request.args.get('family_name').lower())
+        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).options(
+            selectinload(Person.native_name)).filter(Person.family_name == request.args.get('family_name').lower())
     elif request.args.get('first_name') and request.args.get('family_name'):
         query = Person.query.\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
+            options(selectinload(Person.native_name)).\
             filter(and_(
                 Person.first_name == request.args.get('first_name').lower(),
                 Person.family_name == request.args.get('family_name').lower()
             ))
     elif request.args.get('everyone'):
-        query = Person.query.options(selectinload(
-            Person.birth)).options(selectinload(Person.image))
-        # No form fields completed
+        query = Person.query.options(selectinload(Person.birth)).options(
+            selectinload(Person.image)).options(selectinload(Person.native_name))
+    # No form fields completed
     else:
         message = 'You have to fill in all the search fields.'
 

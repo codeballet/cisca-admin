@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block main %}
-    <h5>Create new person</h5>
+    <h4>Create new person</h4>
     <form action="{{ url_for('index.create') }}" method="POST">
+        <h6>English names</h6>
         <div class="form-group">
             <input autocomplete="off" autofocus type="text" class="form-control" id="nickname" name="nickname" placeholder="Nickname">
         </div>
@@ -18,6 +19,17 @@
         </div>
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" id="family_name" name="family_name" placeholder="Family name (required)" required>
+        </div>
+
+        <h6>Native names</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="native_first" placeholder="Native first name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="native_middle" placeholder="Native middle name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="native_family" placeholder="Native family name">
         </div>
 
         <h6>Date of birth</h6>
