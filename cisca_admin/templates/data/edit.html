@@ -49,6 +49,22 @@
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" id="birth_day" name="birth_day" value="{{ person.birth.birth_day}}" placeholder="Birthday">
         </div>
+
+        <h6>Passport</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="passport_no" value="{{ person.passport.passport_no}}" placeholder="Passport number">
+        </div>
+
+        <h6>RAD</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="rad_pin" value="{{ person.rad_number.rad_pin}}" placeholder="RAD PIN">
+        </div>
+
+        <h6>ISTD</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="istd_pin" value="{{ person.istd_number.istd_pin}}" placeholder="ISTD PIN">
+        </div>
+
         <button class="btn btn-primary" type="submit">Update</button>
         <a href="{{ url_for('index.delete', person_id=person.person_id) }}" class="btn btn-danger" role="button">Delete</a>
     </form>

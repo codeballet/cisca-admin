@@ -25,25 +25,6 @@ class Birth(Base):
         return f'<Birth {self.birth_year}-{self.birth_month}-{self.birth_day}>'
 
 
-class Image(Base):
-    query = db_session.query_property()
-
-    __tablename__ = 'images'
-    image_id = Column(Integer, primary_key=True)
-    image_file = Column(String(10), unique=True, nullable=False)
-    person_id = Column(Integer,
-                       ForeignKey('people.person_id', ondelete="CASCADE"))
-
-    person = relationship("Person", back_populates="image")
-
-    def __init__(self, image_file=None, person_id=None):
-        self.image_file = image_file
-        self.person_id = person_id
-
-    def __repr__(self):
-        return f'<Image {self.image_file}>'
-
-
 class ChName(Base):
     query = db_session.query_property()
 
@@ -66,6 +47,65 @@ class ChName(Base):
         return f'<ChName {self.ch_first}, {self.ch_middle}, {self.ch_family}>'
 
 
+class Image(Base):
+    query = db_session.query_property()
+
+    __tablename__ = 'images'
+    image_id = Column(Integer, primary_key=True)
+    image_file = Column(String(10), unique=True, nullable=False)
+    person_id = Column(Integer,
+                       ForeignKey('people.person_id', ondelete="CASCADE"))
+
+    person = relationship("Person", back_populates="image")
+
+    def __init__(self, image_file=None, person_id=None):
+        self.image_file = image_file
+        self.person_id = person_id
+
+    def __repr__(self):
+        return f'<Image {self.image_file}>'
+
+
+class IstdNumber(Base):
+    query = db_session.query_property()
+
+    __tablename__ = 'istd_numbers'
+    istd_id = Column(Integer, primary_key=True)
+    istd_pin = Column(String(10), unique=True, nullable=False)
+    person_id = Column(Integer, ForeignKey(
+        'people.person_id', ondelete="CASCADE"
+    ))
+
+    person = relationship("Person", back_populates="istd_number")
+
+    def __init__(self, istd_pin=None, person_id=None):
+        self.istd_pin = istd_pin
+        self.person_id = person_id
+
+    def __repr__(self):
+        return f'<IstdNumber {self.istd_pin}, {self.person_id}>'
+
+
+class Passport(Base):
+    query = db_session.query_property()
+
+    __tablename__ = 'passports'
+    passport_id = Column(Integer, primary_key=True)
+    passport_no = Column(String(30), unique=True, nullable=False)
+    person_id = Column(Integer, ForeignKey(
+        'people.person_id', ondelete="CASCADE"
+    ))
+
+    person = relationship("Person", back_populates="passport")
+
+    def __init__(self, passport_no=None, person_id=None):
+        self.passport_no = passport_no
+        self.person_id = person_id
+
+    def __repr__(self):
+        return f'<Passport {self.passport_no}, {self.person_id}>'
+
+
 class Person(Base):
     query = db_session.query_property()
 
@@ -81,13 +121,29 @@ class Person(Base):
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )
+    ch_name = relationship(
+        "ChName", uselist=False,
+        back_populates="person",
+        cascade="all, delete, delete-orphan"
+    )
     image = relationship(
         "Image", uselist=False,
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )
-    ch_name = relationship(
-        "ChName", uselist=False,
+    istd_number = relationship(
+        "IstdNumber", uselist=False,
+        back_populates="person",
+        cascade="all, delete, delete-orphan"
+    )
+    passport = relationship(
+        "Passport", uselist=False,
+        back_populates="person",
+        cascade="all, delete, delete-orphan"
+    )
+
+    rad_number = relationship(
+        "RadNumber", uselist=False,
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )
@@ -100,6 +156,26 @@ class Person(Base):
 
     def __repr__(self):
         return f'<Person {self.first_name}, {self.family_name}>'
+
+
+class RadNumber(Base):
+    query = db_session.query_property()
+
+    __tablename__ = 'rad_numbers'
+    rad_id = Column(Integer, primary_key=True)
+    rad_pin = Column(String(10), unique=True, nullable=False)
+    person_id = Column(Integer, ForeignKey(
+        'people.person_id', ondelete="CASCADE"
+    ))
+
+    person = relationship("Person", back_populates="rad_number")
+
+    def __init__(self, rad_pin=None, person_id=None):
+        self.rad_pin = rad_pin
+        self.person_id = person_id
+
+    def __repr__(self):
+        return f'<RadNumber {self.rad_pin}, {self.person_id}>'
 
 
 class User(Base):

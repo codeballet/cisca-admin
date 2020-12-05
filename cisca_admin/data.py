@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
-from cisca_admin.models import Birth, Image, ChName, Person, User
+from cisca_admin.models import Birth, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
 from cisca_admin.helpers import allowed_file
 
 bp = Blueprint('index', __name__)
@@ -49,28 +49,39 @@ def create():
             else request.form.get('middle_name').lower()
         family_name = '' if not request.form.get('family_name') \
             else request.form.get('family_name').lower()
+
         ch_first = '' if not request.form.get('ch_first') \
             else request.form.get('ch_first').lower()
         ch_middle = '' if not request.form.get('ch_middle') \
             else request.form.get('ch_middle').lower()
         ch_family = '' if not request.form.get('ch_family') \
             else request.form.get('ch_family').lower()
+
         birth_year = request.form.get('birth_year')
         birth_month = request.form.get('birth_month')
         birth_day = request.form.get('birth_day')
+
+        passport_no = request.form.get('passport_no')
+        rad_pin = request.form.get('rad_pin')
+        istd_pin = request.form.get('istd_pin')
+
         message = None
 
+        # Check for required fields
         if not first_name:
             message = 'First name is required.'
-        elif not family_name:
+        if not family_name:
             message = 'Family name is required.'
-        elif birth_year and not re.search("^\d{4}$", birth_year):
+
+        # Validate birth input
+        if birth_year and not re.search("^\d{4}$", birth_year):
             message = 'Please enter the year of birth with four digits, as in "1971".'
-        elif birth_month and not re.search("^\d{2}$", birth_month):
+        if birth_month and not re.search("^\d{2}$", birth_month):
             message = 'Please enter the month of birth with two digits, as in "12".'
-        elif birth_day and not re.search("^\d{2}$", birth_day):
+        if birth_day and not re.search("^\d{2}$", birth_day):
             message = 'Please enter the day of birth with two digits, as in "09".'
 
+        # Check if names already exist in db
         query = Person.query.options(selectinload(Person.birth)).filter(and_(
             Person.first_name == first_name,
             Person.family_name == family_name)).first()
@@ -78,13 +89,22 @@ def create():
         if query is not None:
             message = f'I already have {query.first_name.capitalize()} {query.family_name.capitalize()}{". " if not query.birth.birth_year else ", born " + query.birth.birth_year + "-" + query.birth.birth_month + "-" + query.birth.birth_day + ". "} Are you sure you want to add another?'
 
+        # Everything is OK
         if message is None:
+            # Add new person to database
             new_person = Person(first_name=first_name, middle_name=middle_name,
                                 family_name=family_name, nickname=nickname)
+
             new_person.ch_name = ChName(
                 ch_first=ch_first, ch_middle=ch_middle, ch_family=ch_family)
+
             new_person.birth = Birth(
                 birth_year=birth_year, birth_month=birth_month, birth_day=birth_day)
+
+            new_person.passport = Passport(passport_no=passport_no)
+            new_person.rad_number = RadNumber(rad_pin=rad_pin)
+            new_person.istd_number = IstdNumber(istd_pin=istd_pin)
+
             db_session.add(new_person)
             db_session.commit()
 
@@ -138,24 +158,33 @@ def edit(person_id):
         first_name = request.form.get('first_name').lower()
         middle_name = request.form.get('middle_name').lower()
         family_name = request.form.get('family_name').lower()
+
         ch_first = request.form.get('ch_first').lower()
         ch_middle = request.form.get('ch_middle').lower()
         ch_family = request.form.get('ch_family').lower()
+
         birth_year = request.form.get('birth_year')
         birth_month = request.form.get('birth_month')
         birth_day = request.form.get('birth_day')
+
+        passport_no = request.form.get('passport_no')
+        rad_pin = request.form.get('rad_pin')
+        istd_pin = request.form.get('istd_pin')
+
         message = None
 
         # Check input on required fields
         if not first_name:
             message = 'First name is required.'
-        elif not family_name:
+        if not family_name:
             message = 'Family name is required.'
-        elif birth_year and not re.search("^\d{4}$", birth_year):
+
+        # Validate birth input
+        if birth_year and not re.search("^\d{4}$", birth_year):
             message = 'Please enter the year of birth with four digits, as in "1971".'
-        elif birth_month and not re.search("^\d{2}$", birth_month):
+        if birth_month and not re.search("^\d{2}$", birth_month):
             message = 'Please enter the month of birth with two digits, as in "12".'
-        elif birth_day and not re.search("^\d{2}$", birth_day):
+        if birth_day and not re.search("^\d{2}$", birth_day):
             message = 'Please enter the day of birth with two digits, as in "09".'
 
         # Everything is OK
@@ -163,7 +192,7 @@ def edit(person_id):
             query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).filter(
                 Person.person_id == person_id).first()
 
-            # Compare English name input
+            # Compare and add English name input
             if query.nickname != nickname:
                 flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s nickname {query.nickname.capitalize()} changed to {nickname.capitalize()}.")
                 query.nickname = nickname
@@ -177,7 +206,7 @@ def edit(person_id):
                 flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s family name {query.family_name.capitalize()} changed to {family_name.capitalize()}.")
                 query.family_name = family_name
 
-            # Compare Chinese name input
+            # Compare and add Chinese name input
             if query.ch_name.ch_first != ch_first:
                 flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s Chinese first name {query.ch_name.ch_first.capitalize()} changed to {ch_first.capitalize()}.")
                 query.ch_name.ch_first = ch_first
@@ -188,7 +217,7 @@ def edit(person_id):
                 flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s Chinese family name {query.ch_name.ch_family.capitalize()} changed to {ch_family.capitalize()}.")
                 query.ch_name.ch_family = ch_family
 
-            # Compare birthdate input
+            # Compare and add birthdate input
             if query.birth.birth_year != birth_year:
                 flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s birth year {query.birth.birth_year} changed to {birth_year}.")
                 query.birth.birth_year = birth_year
@@ -198,6 +227,16 @@ def edit(person_id):
             if query.birth.birth_day != birth_day:
                 flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s birthday {query.birth.birth_day} changed to {birth_day}.")
                 query.birth.birth_day = birth_day
+
+            # Compare and add numbers input
+            if query.passport.passport_no != passport_no:
+                flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s passport number {query.passport.passport_no} changed to {passport_no}.")
+                query.passport.passport_no = passport_no
+            if query.rad_number.rad_pin != rad_pin:
+                flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s RAD PIN {query.rad_number.rad_pin} changed to {rad_pin}.")
+                query.rad_number.rad_pin = rad_pin
+            if query.istd_number.istd_pin != istd_pin:
+                flash(f"{query.first_name.capitalize()} {query.family_name.capitalize()}'s ISTD PIN {query.istd_number.istd_pin} changed to {istd_pin}.")
 
             # Write to db
             db_session.add(query)
@@ -212,6 +251,9 @@ def edit(person_id):
         options(selectinload(Person.birth)).\
         options(selectinload(Person.image)).\
         options(selectinload(Person.ch_name)).\
+        options(selectinload(Person.passport)).\
+        options(selectinload(Person.rad_number)).\
+        options(selectinload(Person.istd_number)).\
         filter(Person.person_id == person_id).first()
 
     return render_template('data/edit.html', person=query)
@@ -281,29 +323,55 @@ def results():
     message = None
 
     if request.args.get('nickname'):
-        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).options(
-            selectinload(Person.ch_name)).filter(Person.nickname == request.args.get('nickname').lower())
+        query = Person.query.\
+            options(selectinload(Person.birth)).\
+            options(selectinload(Person.image)).\
+            options(selectinload(Person.ch_name)).\
+            options(selectinload(Person.passport)).\
+            options(selectinload(Person.rad_number)).\
+            options(selectinload(Person.istd_number)).\
+            filter(Person.nickname == request.args.get('nickname').lower())
     elif request.args.get('first_name'):
-        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).options(
-            selectinload(Person.ch_name)).filter(Person.first_name == request.args.get('first_name'))
+        query = Person.query.\
+            options(selectinload(Person.birth)).\
+            options(selectinload(Person.image)).\
+            options(selectinload(Person.ch_name)).\
+            options(selectinload(Person.passport)).\
+            options(selectinload(Person.rad_number)).\
+            options(selectinload(Person.istd_number)).\
+            filter(Person.first_name == request.args.get('first_name'))
     elif request.args.get('family_name'):
-        query = Person.query.options(selectinload(Person.birth)).options(selectinload(Person.image)).options(
-            selectinload(Person.ch_name)).filter(Person.family_name == request.args.get('family_name').lower())
+        query = Person.query.\
+            options(selectinload(Person.birth)).\
+            options(selectinload(Person.image)).\
+            options(selectinload(Person.ch_name)).\
+            options(selectinload(Person.passport)).\
+            options(selectinload(Person.rad_number)).\
+            options(selectinload(Person.istd_number)).\
+            filter(Person.family_name == request.args.get('family_name').lower())
     elif request.args.get('first_name') and request.args.get('family_name'):
         query = Person.query.\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
             options(selectinload(Person.ch_name)).\
+            options(selectinload(Person.passport)).\
+            options(selectinload(Person.rad_number)).\
+            options(selectinload(Person.istd_number)).\
             filter(and_(
                 Person.first_name == request.args.get('first_name').lower(),
                 Person.family_name == request.args.get('family_name').lower()
             ))
     elif request.args.get('everyone'):
-        query = Person.query.options(selectinload(Person.birth)).options(
-            selectinload(Person.image)).options(selectinload(Person.ch_name))
-    # No form fields completed
+        query = Person.query.\
+            options(selectinload(Person.birth)).\
+            options(selectinload(Person.image)).\
+            options(selectinload(Person.ch_name)).\
+            options(selectinload(Person.passport)).\
+            options(selectinload(Person.rad_number)).\
+            options(selectinload(Person.istd_number))
     else:
-        message = 'You have to fill in all the search fields.'
+        # No form fields completed
+        message = 'Please fill in all the search fields.'
 
     # Check query for result
     if query.first() is None:
