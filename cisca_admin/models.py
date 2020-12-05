@@ -108,7 +108,7 @@ class User(Base):
     __tablename__ = 'users'
     user_id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True, nullable=False)
-    password = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
     priviledge = Column(Integer, nullable=False, default=0)
 
     def __init__(self, username=None, password=None, priviledge=None):
