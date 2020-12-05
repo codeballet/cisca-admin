@@ -14,6 +14,7 @@
     {% endif %}
 
     <form action="{{ url_for('index.edit', person_id=person.person_id) }}" method="POST">
+        <h6>English Names</h6>
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" id="nickname" name="nickname" value="{{ person.nickname.capitalize() }}" placeholder="Nickname">
         </div>
@@ -25,6 +26,17 @@
         </div>
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" id="family_name" name="family_name" value="{{ person.family_name.capitalize() }}" required>
+        </div>
+
+        <h6>Chinese Names</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="ch_first" value="{{ person.ch_name.ch_first.capitalize() }}" placeholder="Chinese first name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="ch_middle" value="{{ person.ch_name.ch_middle.capitalize() }}" placeholder="Chinese middle name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="ch_family" value="{{ person.ch_name.ch_family.capitalize() }}" placeholder="Chinese family name">
         </div>
 
         <h6>Date of birth</h6>

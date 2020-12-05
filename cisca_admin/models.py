@@ -36,33 +36,34 @@ class Image(Base):
 
     person = relationship("Person", back_populates="image")
 
-    def __init__(self, image_file=None):
+    def __init__(self, image_file=None, person_id=None):
         self.image_file = image_file
+        self.person_id = person_id
 
     def __repr__(self):
         return f'<Image {self.image_file}>'
 
 
-class NativeName(Base):
+class ChName(Base):
     query = db_session.query_property()
 
-    __tablename__ = "native_names"
-    native_id = Column(Integer, primary_key=True)
-    native_first = Column(String(50))
-    native_middle = Column(String(50))
-    native_family = Column(String(50))
+    __tablename__ = "ch_names"
+    ch_id = Column(Integer, primary_key=True)
+    ch_first = Column(String(50))
+    ch_middle = Column(String(50))
+    ch_family = Column(String(50))
     person_id = Column(Integer, ForeignKey(
         'people.person_id', ondelete="CASCADE"))
 
-    person = relationship("Person", back_populates="native_name")
+    person = relationship("Person", back_populates="ch_name")
 
-    def __init__(self, native_first=None, native_middle=None, native_family=None):
-        self.native_first = native_first
-        self.native_middle = native_middle
-        self.native_family = native_family
+    def __init__(self, ch_first=None, ch_middle=None, ch_family=None):
+        self.ch_first = ch_first
+        self.ch_middle = ch_middle
+        self.ch_family = ch_family
 
     def __repr__(self):
-        return f'<NativeName {self.native_first}, {self.native_middle}, {self.native_family}>'
+        return f'<ChName {self.ch_first}, {self.ch_middle}, {self.ch_family}>'
 
 
 class Person(Base):
@@ -85,8 +86,8 @@ class Person(Base):
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )
-    native_name = relationship(
-        "NativeName", uselist=False,
+    ch_name = relationship(
+        "ChName", uselist=False,
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )

@@ -11,7 +11,7 @@
                 <th scope="col">Picture</th>
                 <th scope="col">Nickname</th>
                 <th scope="col">English Name</th>
-                <th scope="col">Native Name</th>
+                <th scope="col">Chinese Name</th>
                 <th scope="col">Birthdate</th>
             </tr>
         </thead>
@@ -25,7 +25,7 @@
                     {% endif %}
                     <td>{{ row.nickname.capitalize() }}</td>
                     <td><a href="{{ url_for('index.edit', person_id=row.person_id) }}">{{ row.first_name.capitalize() }} {{ row.middle_name.capitalize() }} {{ row.family_name.capitalize() }}</a></td>
-                    <td>{{ row.native_name.native_first.capitalize() }} {{ row.native_name.native_middle.capitalize() }} {{ row.native_name.native_family.capitalize() }}</td>
+                    <td>{{ row.ch_name.ch_family.capitalize() }} {{ row.ch_name.ch_first.capitalize() }} {{ row.ch_name.ch_middle.capitalize() }}</td>
                     <td>{{ row.birth.birth_year }}-{{ row.birth.birth_month }}-{{ row.birth.birth_day }}</td>
                 </tr>
             {% endfor %}
