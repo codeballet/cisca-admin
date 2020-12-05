@@ -64,11 +64,11 @@ def create():
             message = 'First name is required.'
         elif not family_name:
             message = 'Family name is required.'
-        elif not re.search("^\d{4}$", birth_year):
+        elif birth_year and not re.search("^\d{4}$", birth_year):
             message = 'Please enter the year of birth with four digits, as in "1971".'
-        elif not re.search("^\d{2}$", birth_month):
+        elif birth_month and not re.search("^\d{2}$", birth_month):
             message = 'Please enter the month of birth with two digits, as in "12".'
-        elif not re.search("^\d{2}$", birth_day):
+        elif birth_day and not re.search("^\d{2}$", birth_day):
             message = 'Please enter the day of birth with two digits, as in "09".'
 
         query = Person.query.options(selectinload(Person.birth)).filter(and_(
@@ -151,11 +151,11 @@ def edit(person_id):
             message = 'First name is required.'
         elif not family_name:
             message = 'Family name is required.'
-        elif not re.search("^\d{4}$", birth_year):
+        elif birth_year and not re.search("^\d{4}$", birth_year):
             message = 'Please enter the year of birth with four digits, as in "1971".'
-        elif not re.search("^\d{2}$", birth_month):
+        elif birth_month and not re.search("^\d{2}$", birth_month):
             message = 'Please enter the month of birth with two digits, as in "12".'
-        elif not re.search("^\d{2}$", birth_day):
+        elif birth_day and not re.search("^\d{2}$", birth_day):
             message = 'Please enter the day of birth with two digits, as in "09".'
 
         # Everything is OK
