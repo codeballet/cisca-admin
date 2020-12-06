@@ -5,6 +5,8 @@ from flask import (
 from sqlalchemy import and_
 from sqlalchemy.orm import selectinload
 
+from flask_paginate import Pagination, get_page_args
+
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
 from cisca_admin.models import Birth, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
@@ -12,11 +14,10 @@ from cisca_admin.models import Birth, Image, IstdNumber, ChName, Passport, Perso
 bp = Blueprint('results', __name__, url_prefix='/results')
 
 
-@ bp.route('/list', methods=('GET',))
+@ bp.route('/table', methods=('GET',))
 @ login_required
-def list():
+def table():
     message = None
-    print(f"url argument: {request.args.get('first_name')}")
 
     if request.args.get('nickname'):
         query = Person.query.\
@@ -84,7 +85,28 @@ def list():
 
     # Query is successful, redirect
     if message is None:
-        return render_template('people/results.html', query=query)
+        # Pagination
+        page = int(request.args.get('page', 1))
+        per_page = 10
+        offset = (page - 1) * per_page
+        query_for_render = query.limit(per_page).offset(offset)
+
+        search = False
+
+        q = request.args.get('q')
+        if q:
+            search = True
+
+        pagination = Pagination(
+            page=page,
+            per_page=per_page,
+            offset=offset,
+            total=query.count(),
+            css_framework='bootstrap4',
+            search=search
+        )
+
+        return render_template('people/results.html', query=query_for_render, pagination=pagination)
 
     # No successful query
     flash(message)

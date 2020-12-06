@@ -3,6 +3,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+
 engine = create_engine(
     f'sqlite:///instance/cisca.db', echo=True, convert_unicode=True)
 db_session = scoped_session(sessionmaker(autocommit=False,

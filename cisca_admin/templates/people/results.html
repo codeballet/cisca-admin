@@ -5,9 +5,14 @@
 {% endblock %}
 
 {% block main %}
+    <div class="mb-3">
+    {{ pagination.info }}
+    </div>
+    {{ pagination.links }}
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>#</th>
                 <th scope="col">Picture</th>
                 <th scope="col">Nickname</th>
                 <th scope="col">English Name</th>
@@ -21,6 +26,7 @@
         <tbody>
             {% for row in query %}
                 <tr>
+                    <td>{{ loop.index + pagination.skip }}</td>
                     {% if row.image %}
                         <td>
                             <a href="{{ url_for('person.id', person_id=row.person_id) }}">
@@ -55,4 +61,5 @@
             {% endfor %}
         </tbody>
     </table>
+    {{ pagination.links }}
 {% endblock %}

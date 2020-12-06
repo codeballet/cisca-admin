@@ -16,18 +16,18 @@ def terms():
 
         # Check content of the form fields
         if request.form.get('nickname'):
-            return redirect(url_for('results.list', nickname=request.form.get('nickname').lower()))
+            return redirect(url_for('results.table', nickname=request.form.get('nickname').lower()))
         elif request.form.get('first_name'):
-            return redirect(url_for('results.list', first_name=request.form.get('first_name').lower()))
+            return redirect(url_for('results.table', first_name=request.form.get('first_name').lower()))
         elif request.form.get('family_name'):
-            return redirect(url_for('results.list', family_name=request.form.get('family_name').lower()))
+            return redirect(url_for('results.table', family_name=request.form.get('family_name').lower()))
         elif request.form.get('first_name') and request.form.get('family_name'):
-            return redirect(url_for('results.list',
+            return redirect(url_for('results.table',
                                     first_name=request.form.get(
                                         'first_name').lower(),
                                     family_name=request.form.get('family_name').lower()))
         elif request.form.get('everyone'):
-            return redirect(url_for('results.list', everyone=request.form.get('everyone')))
+            return redirect(url_for('results.table', everyone=request.form.get('everyone')))
 
         flash('I could not find anyone.')
         return redirect(url_for('index.index'))
