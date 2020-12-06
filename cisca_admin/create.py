@@ -17,12 +17,25 @@ bp = Blueprint('create', __name__, url_prefix='/create')
 @login_required
 def new():
     if request.method == 'POST':
-        nickname = request.form.get(
-            'nickname') if request.form.get('nickname') else None
-        first_name = request.form.get('first_name')
-        middle_name = request.form.get(
-            'middle_name') if request.form.get('middle_name') else None
-        family_name = request.form.get('family_name')
+        if request.form.get('nickname'):
+            nickname = request.form.get('nickname').lower()
+        else:
+            nickname = None
+
+        if request.form.get('first_name'):
+            first_name = request.form.get('first_name').lower()
+        else:
+            first_name = None
+
+        if request.form.get('middle_name'):
+            middle_name = request.form.get('middle_name').lower()
+        else:
+            middle_name = None
+
+        if request.form.get('family_name'):
+            family_name = request.form.get('family_name').lower()
+        else:
+            family_name = None
 
         ch_first = request.form.get(
             'ch_first') if request.form.get('ch_first') else None
@@ -67,7 +80,9 @@ def new():
             Person.family_name == family_name)).first()
 
         if query is not None:
-            message = f'I already have {query.first_name.capitalize()} {query.family_name.capitalize()}{". " if not query.birth.birth_year else ", born " + query.birth.birth_year + "-" + query.birth.birth_month + "-" + query.birth.birth_day + ". "} Are you sure you want to add another?'
+            birth = None if not query.birth else 1
+            flash(
+                f'Do note that I have another {query.first_name.capitalize()} {query.family_name.capitalize()}{". " if not birth else ", born " + query.birth.birth_year + "-" + query.birth.birth_month + "-" + query.birth.birth_day + ". "} Please delete any double entries.')
 
         # Everything is OK
         if message is None:

@@ -10,7 +10,7 @@
     {% if person.image %}
         <img src="../../static/images/{{ person.image.image_file }}" alt="image thumbnail">
     {% else %}
-        <td><a href="{{ url_for('index.upload', person_id=person.person_id) }}">Upload image</a></td>
+        <td><a href="{{ url_for('upload.id', person_id=person.person_id) }}">Upload image</a></td>
     {% endif %}
 
     <h5 class="mt-3">Personal details</h5>

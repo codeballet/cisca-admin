@@ -80,6 +80,9 @@ def create_app(test_config=None):
     from . import results
     app.register_blueprint(results.bp)
 
+    from . import upload
+    app.register_blueprint(upload.bp)
+
     return app
 
     def errorhandler(e):

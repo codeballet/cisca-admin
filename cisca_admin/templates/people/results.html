@@ -28,7 +28,7 @@
                             </a>
                         </td>
                     {% else %}
-                        <td><a href="{{ url_for('index.upload', person_id=row.person_id) }}">Upload</a></td>
+                        <td><a href="{{ url_for('upload.id', person_id=row.person_id) }}">Upload</a></td>
                     {% endif %}
                     <td>{% if row.nickname %}{{ row.nickname.capitalize() }}{% endif %}</td>
                     <td>

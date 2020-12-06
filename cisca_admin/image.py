@@ -44,7 +44,7 @@ def id(person_id):
         if request.form.get('change'):
             flash(
                 f'Please choose a new image for {person.first_name.capitalize()} {person.family_name.capitalize()}.')
-            return redirect(url_for('index.upload', person_id=person_id))
+            return redirect(url_for('upload.id', person_id=person_id))
 
     query = Person.query.options(selectinload(Person.image)).filter(
         Person.person_id == person_id).first()

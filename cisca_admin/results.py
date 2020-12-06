@@ -16,36 +16,42 @@ bp = Blueprint('results', __name__, url_prefix='/results')
 @ login_required
 def list():
     message = None
+    print(f"url argument: {request.args.get('first_name')}")
 
     if request.args.get('nickname'):
         query = Person.query.\
+            order_by(Person.family_name.asc()).\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
             options(selectinload(Person.ch_name)).\
             options(selectinload(Person.passport)).\
             options(selectinload(Person.rad_number)).\
             options(selectinload(Person.istd_number)).\
-            filter(Person.nickname == request.args.get('nickname').lower())
+            filter(Person.nickname == request.args.get('nickname'))
     elif request.args.get('first_name'):
+        name = request.args.get('first_name')
         query = Person.query.\
+            order_by(Person.family_name.asc()).\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
             options(selectinload(Person.ch_name)).\
             options(selectinload(Person.passport)).\
             options(selectinload(Person.rad_number)).\
             options(selectinload(Person.istd_number)).\
-            filter(Person.first_name == request.args.get('first_name'))
+            filter(Person.first_name == name)
     elif request.args.get('family_name'):
         query = Person.query.\
+            order_by(Person.first_name.asc()).\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
             options(selectinload(Person.ch_name)).\
             options(selectinload(Person.passport)).\
             options(selectinload(Person.rad_number)).\
             options(selectinload(Person.istd_number)).\
-            filter(Person.family_name == request.args.get('family_name').lower())
+            filter(Person.family_name == request.args.get('family_name'))
     elif request.args.get('first_name') and request.args.get('family_name'):
         query = Person.query.\
+            order_by(Person.person_id.asc()).\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
             options(selectinload(Person.ch_name)).\
@@ -58,6 +64,10 @@ def list():
             ))
     elif request.args.get('everyone'):
         query = Person.query.\
+            order_by(
+                Person.family_name.asc(),
+                Person.first_name.asc()
+            ).\
             options(selectinload(Person.birth)).\
             options(selectinload(Person.image)).\
             options(selectinload(Person.ch_name)).\
