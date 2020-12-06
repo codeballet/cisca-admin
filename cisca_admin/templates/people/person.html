@@ -1,0 +1,58 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Person
+{% endblock %}
+
+{% block main %}
+    <h4>{{ person.first_name.capitalize() }} {{ person.family_name.capitalize() }}</h4>
+
+    {% if person.image %}
+        <img src="../../static/images/{{ person.image.image_file }}" alt="image thumbnail">
+    {% else %}
+        <td><a href="{{ url_for('index.upload', person_id=person.person_id) }}">Upload image</a></td>
+    {% endif %}
+
+    <h5 class="mt-3">Personal details</h5>
+    {% if person.nickname %}
+        <p>Nickname: {{ person.nickname.capitalize() }}</p>
+    {% endif %}
+
+    <h6>English name:</h6>
+    <p>
+        {{ person.first_name.capitalize()}} 
+        {% if person.middle_name %}{{ person.middle_name.capitalize() }} {% endif %}
+        {{ person.family_name.capitalize() }}
+    </p>
+
+    {% if person.ch_name %}
+        <h6>Chinese name:</h6>
+        <p>
+            {% if person.ch_name.ch_family %}{{ person.ch_name.ch_family }} {% endif %}
+            {% if person.ch_name.ch_first %}{{ person.ch_name.ch_first.capitalize() }} {% endif %}
+            {% if person.ch_name.ch_middle %}{{ person.ch_name.ch_middle.capitalize() }}{% endif %}
+        </p>
+    {% endif %}
+
+    {% if person.birth %}
+        <h6>Date of birth:</h6>
+        <p>{{ person.birth.birth_year }}-{{ person.birth.birth_month }}-{{ person.birth.birth_day }}</p>
+    {% endif %}
+    
+    {% if person.passport %}
+        <h6>Passport number</h6>
+        <p>{{ person.passport.passport_no }}</p>
+    {% endif %}
+
+    {% if person.rad_number %}
+        <h6>RAD PIN:</h6>
+        <p>{{ person.rad_number.rad_pin }}</p>
+    {% endif %}
+    
+    {% if person.istd_number %}
+        <h6>ISTD PIN:</h6>
+        <p>{{ person.istd_number.istd_pin }}</p>
+    {% endif %}
+
+    <a href="{{ url_for('edit.id', person_id=person.person_id) }}" class="btn btn-primary" role="button">Edit</a>
+{% endblock %}

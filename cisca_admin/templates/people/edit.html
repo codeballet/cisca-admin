@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Edit
+{% endblock %}
+
+{% block main %}
+    <h5>Edit details for {{ person.first_name.capitalize() }} {{ person.family_name.capitalize() }}</h5>
+
+    {% if person.image %}
+        <div class="form-group">
+            <a href="{{ url_for('image.id', person_id=person.person_id) }}"><img src="../../static/images/{{ person.image.image_file }}" class="img-thumbnail rounded" alt="image thumbnail"></a>
+        </div>
+    {% endif %}
+
+    <form action="{{ url_for('edit.id', person_id=person.person_id) }}" method="POST">
+        <h6>English Names</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_nickname" name="nickname" value="{% if person.nickname %}{{ person.nickname.capitalize() }}{% endif %}" placeholder="Nickname">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_first_name" name="first_name" value="{{ person.first_name.capitalize() }}" required>
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_middle_name" name="middle_name" value="{% if person.middle_name %}{{ person.middle_name.capitalize() }}{% endif %}" placeholder="Middle name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_family_name" name="family_name" value="{{ person.family_name.capitalize() }}" required>
+        </div>
+
+        <h6>Chinese Names</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_ch_family" name="ch_family" value="{% if person.ch_name.ch_family %}{{ person.ch_name.ch_family.capitalize() }}{% endif %}" placeholder="Chinese family name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_ch_first" name="ch_first" value="{% if person.ch_name.ch_first %}{{ person.ch_name.ch_first.capitalize() }}{% endif %}" placeholder="Chinese first name">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="edit_ch_middle" name="ch_middle" value="{% if person.ch_name.ch_middle %}{{ person.ch_name.ch_middle.capitalize() }}{% endif %}" placeholder="Chinese middle name">
+        </div>
+
+        <h6>Date of birth</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="birth_year" name="birth_year" value="{{ person.birth.birth_year}}" placeholder="Birth year">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="birth_month" name="birth_month" value="{{ person.birth.birth_month}}" placeholder="Birth month">
+        </div>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" id="birth_day" name="birth_day" value="{{ person.birth.birth_day}}" placeholder="Birthday">
+        </div>
+
+        <h6>Passport number</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="passport_no" value="{{ person.passport.passport_no}}" placeholder="Passport number">
+        </div>
+
+        <h6>RAD PIN</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="rad_pin" value="{{ person.rad_number.rad_pin}}" placeholder="RAD PIN">
+        </div>
+
+        <h6>ISTD PIN</h6>
+        <div class="form-group">
+            <input autocomplete="off" type="text" class="form-control" name="istd_pin" value="{{ person.istd_number.istd_pin}}" placeholder="ISTD PIN">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Update</button>
+        <a href="{{ url_for('delete.id', person_id=person.person_id) }}" class="btn btn-danger" role="button">Delete</a>
+    </form>
+{% endblock %}

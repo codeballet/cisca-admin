@@ -6,7 +6,7 @@
 
 {% block main %}
     <h5>Enter your search term</h5>
-    <form action="{{ url_for('index.find') }}" method="POST">
+    <form action="{{ url_for('find.terms') }}" method="POST">
         {% if criteria == search_criteria[0] %}
             <div class="form-group">
                 <input autocomplete="off" autofocus type="text" class="form-control" name="nickname" placeholder="Nickname" required>

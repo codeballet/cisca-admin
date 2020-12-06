@@ -55,9 +55,30 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from . import data
-    app.register_blueprint(data.bp)
+    from . import create
+    app.register_blueprint(create.bp)
+
+    from . import delete
+    app.register_blueprint(delete.bp)
+
+    from . import edit
+    app.register_blueprint(edit.bp)
+
+    from . import find
+    app.register_blueprint(find.bp)
+
+    from . import image
+    app.register_blueprint(image.bp)
+
+    from . import index
+    app.register_blueprint(index.bp)
     app.add_url_rule('/', endpoint='index')
+
+    from . import person
+    app.register_blueprint(person.bp)
+
+    from . import results
+    app.register_blueprint(results.bp)
 
     return app
 

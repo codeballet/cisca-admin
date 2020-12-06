@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    <form action="{{ url_for('index.find') }}" method="POST">
+    <form action="{{ url_for('find.terms') }}" method="POST">
         <div class="form-group">
             <input class="find-everyone" name="everyone" value="everyone">
             <button class="btn btn-primary" type="submit">Find everyone</button>

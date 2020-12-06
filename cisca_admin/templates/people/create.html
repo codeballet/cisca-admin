@@ -6,7 +6,7 @@
 
 {% block main %}
     <h4>Create new person</h4>
-    <form action="{{ url_for('index.create') }}" method="POST">
+    <form action="{{ url_for('create.new') }}" method="POST">
         <h6>English names</h6>
         <div class="form-group">
             <input autocomplete="off" autofocus type="text" class="form-control" id="nickname" name="nickname" placeholder="Nickname">

@@ -5,7 +5,8 @@
 {% endblock %}
 
 {% block main %}
-    <form action="{{ url_for('index.image', person_id=person.person_id) }}" method="POST">
+    <form action="{{ url_for('image.id', person_id=person.person_id) }}" method="POST">
+        <h4>Change or delete image for {{ person.first_name.capitalize()}} {{ person.family_name.capitalize() }}</h4>
         <div class="form-group">
             <img src="../../static/images/{{ person.image.image_file }}" class="img-thumbnail rounded" alt="image thumbnail">
         </div>
