@@ -1,1 +1,1 @@
-web: gunicorn cisca_admin.app:app
+web: gunicorn cisca_admin:app
