@@ -1,1 +1,1 @@
-web: gunicorn cisca_admin:app
+web: gunicorn cisca_admin:'create_app()'
