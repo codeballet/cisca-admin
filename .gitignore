@@ -4,7 +4,10 @@ venv/
 *.pyc
 __pycache__/
 
-instance/
+# exclude everything
+instance/*
+# exception to the rule
+!instance/.gitkeep
 
 .pytest_cache/
 .coverage
