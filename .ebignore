@@ -1,0 +1,5 @@
+.gitignore
+flasksession
+cisca.db
+*.jpg
+__pychache__
