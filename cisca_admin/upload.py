@@ -33,12 +33,15 @@ def id(person_id):
         # Check if jpg or png file
         elif file and not allowed_file(file.filename):
             message = 'Please select a "jpg", "jpeg", or "png" image file.'
-        # Secure the filename and save
         elif file and allowed_file(file.filename):
+            # Secure the filename
             filename = secure_filename(file.filename)
             filename_list = filename.split('.')
             filename_list[0] = person_id
             filename_list[1] = filename_list[1].lower()
+            # Change 'jpeg' to 'jpg'
+            if filename_list[1] == 'jpeg':
+                filename_list[1] = 'jpg'
             filename = '.'.join(map(str, filename_list))
 
             # Check if person already has an image
@@ -49,7 +52,7 @@ def id(person_id):
                 flash(
                     f'{query.first_name.capitalize()} {query.family_name.capitalize()} already has an image.')
                 return redirect(url_for('person.id', person_id=person_id))
-
+            # Save the file
             file.save(os.path.join(
                 current_app.config['UPLOAD_FOLDER'], filename))
 
