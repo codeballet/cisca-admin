@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    {% if g.user.priviledge >= 9 %}
+    {% if g.user.privilege >= 9 %}
         <h4>Register new user</h4>
         <form action="{{ url_for('admin.register') }}" method="POST">
             <div class="form-group">

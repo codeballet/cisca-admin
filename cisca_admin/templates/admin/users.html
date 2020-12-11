@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-    {% if g.user.priviledge >= 9 %}
+    {% if g.user.privilege >= 9 %}
         <div class="form-group">
             <a href="{{ url_for('admin.register', method='GET') }}" class="btn btn-primary" role="button">Add new user</a>
         </div>

@@ -19,7 +19,20 @@ bp = Blueprint('results', __name__, url_prefix='/results')
 def table():
     message = None
 
-    if request.args.get('nickname'):
+    if request.args.get('first_name') and request.args.get('family_name'):
+        query = Person.query.\
+            order_by(Person.person_id.asc()).\
+            options(selectinload(Person.birth)).\
+            options(selectinload(Person.image)).\
+            options(selectinload(Person.ch_name)).\
+            options(selectinload(Person.passport)).\
+            options(selectinload(Person.rad_number)).\
+            options(selectinload(Person.istd_number)).\
+            filter(and_(
+                Person.first_name == request.args.get('first_name'),
+                Person.family_name == request.args.get('family_name')
+            ))
+    elif request.args.get('nickname'):
         query = Person.query.\
             order_by(Person.family_name.asc()).\
             options(selectinload(Person.birth)).\
@@ -50,19 +63,6 @@ def table():
             options(selectinload(Person.rad_number)).\
             options(selectinload(Person.istd_number)).\
             filter(Person.family_name == request.args.get('family_name'))
-    elif request.args.get('first_name') and request.args.get('family_name'):
-        query = Person.query.\
-            order_by(Person.person_id.asc()).\
-            options(selectinload(Person.birth)).\
-            options(selectinload(Person.image)).\
-            options(selectinload(Person.ch_name)).\
-            options(selectinload(Person.passport)).\
-            options(selectinload(Person.rad_number)).\
-            options(selectinload(Person.istd_number)).\
-            filter(and_(
-                Person.first_name == request.args.get('first_name').lower(),
-                Person.family_name == request.args.get('family_name').lower()
-            ))
     elif request.args.get('everyone'):
         query = Person.query.\
             order_by(

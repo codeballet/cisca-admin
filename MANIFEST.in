@@ -1,5 +1,4 @@
 include cisca_admin/schema.sql
 graft cisca_admin/static
-graft cisca_admin/static/images
 graft cisca_admin/templates
 global-exclude *.pyc

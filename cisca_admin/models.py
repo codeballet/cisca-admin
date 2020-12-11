@@ -185,12 +185,12 @@ class User(Base):
     user_id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True, nullable=False)
     password = Column(String, nullable=False)
-    priviledge = Column(Integer, nullable=False, default=0)
+    privilege = Column(Integer, nullable=False, default=0)
 
-    def __init__(self, username=None, password=None, priviledge=None):
+    def __init__(self, username=None, password=None, privilege=None):
         self.username = username
         self.password = password
-        self.priviledge = priviledge
+        self.privilege = privilege
 
     def __repr__(self):
         return f'<User {self.username}>'

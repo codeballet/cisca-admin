@@ -23,7 +23,7 @@ def delete():
             User.user_id == user_id).first()
 
         # Check if user is root user
-        if query.priviledge == 11:
+        if query.privilege == 11:
             flash("I'm sorry, but you cannot delete that user!")
             return redirect(url_for('admin.users'))
 
@@ -45,8 +45,8 @@ def register():
     if request.method == 'POST':
         username = request.form.get('reg_username')
         password = request.form.get('reg_password')
-        priviledge = request.form.get('reg_priviledge') if not request.form.get(
-            'reg_priviledge') == 'Priviledge...' else 0
+        privilege = request.form.get('reg_privilege') if not request.form.get(
+            'reg_privilege') == 'Privilege...' else 0
         message = None
 
         if not username:
@@ -73,7 +73,7 @@ def register():
             # Add new user to db
             new_user = User(username=username,
                             password=hashed_password,
-                            priviledge=priviledge)
+                            privilege=privilege)
             db_session.add(new_user)
             db_session.commit()
 

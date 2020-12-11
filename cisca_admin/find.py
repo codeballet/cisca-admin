@@ -15,17 +15,17 @@ def terms():
         message = None
 
         # Check content of the form fields
-        if request.form.get('nickname'):
+        if request.form.get('first_name') and request.form.get('family_name'):
+            return redirect(url_for('results.table',
+                                    first_name=request.form.get(
+                                        'first_name').lower(),
+                                    family_name=request.form.get('family_name').lower()))
+        elif request.form.get('nickname'):
             return redirect(url_for('results.table', nickname=request.form.get('nickname').lower()))
         elif request.form.get('first_name'):
             return redirect(url_for('results.table', first_name=request.form.get('first_name').lower()))
         elif request.form.get('family_name'):
             return redirect(url_for('results.table', family_name=request.form.get('family_name').lower()))
-        elif request.form.get('first_name') and request.form.get('family_name'):
-            return redirect(url_for('results.table',
-                                    first_name=request.form.get(
-                                        'first_name').lower(),
-                                    family_name=request.form.get('family_name').lower()))
         elif request.form.get('everyone'):
             return redirect(url_for('results.table', everyone=request.form.get('everyone')))
 
