@@ -9,15 +9,24 @@
         <h5>Edit "{{ user.username }}"</h5>
         <form action="{{ url_for('admin.user', user_id=user.user_id) }}" method="POST">
             <div class="form-group">
-                <input autocomplete="off" type="text" class="form-control" name="username" value="{{ user.username }}" placeholder="username" required>
+                <input autocomplete="off" type="text" class="form-control" name="username" value="{{ user.username }}" placeholder="username">
             </div>
             <div class="form-group">
-                <input id="new_password" autocomplete="off" class="form-control" name="new_password" placeholder="New password" type="password" required>
+                <input id="new_password" autocomplete="off" class="form-control" name="new_password" placeholder="New password" type="password">
             </div>
             <div class="form-group">
-                <input id="confirm_new_password" autocomplete="off" class="form-control" name="confirm_new_password" placeholder="Confirm new password" type="password" required>
+                <input id="confirm_new_password" autocomplete="off" class="form-control" name="confirm_new_password" placeholder="Confirm new password" type="password">
             </div>
             <p class="confirm_warning">Passwords do not match!</p>
+
+            <div class="form-group">
+                <select name="new_privilege" class="custom-select narrow-select">
+                    <option selected>Privilege...</option>
+                    {% for level in levels %}
+                        <option value="{{ level }}">{{ level }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
             <button class="btn btn-primary" type="submit">Update</button>
             <a href="{{ url_for('admin.delete', user_id=user.user_id) }}" class="btn btn-danger" role="button">Delete</a>

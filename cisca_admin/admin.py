@@ -12,6 +12,9 @@ from cisca_admin.models import User
 bp = Blueprint('admin', __name__, url_prefix='/admin')
 
 
+LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
 @bp.route('/delete', methods=('GET', 'POST'))
 @login_required
 def delete():
@@ -82,7 +85,7 @@ def register():
 
         flash(message)
 
-    return render_template('admin/register.html', levels=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    return render_template('admin/register.html', levels=LEVELS)
 
 
 @bp.route('/settings', methods=('GET', 'POST'))
@@ -135,23 +138,27 @@ def settings():
     return render_template('admin/settings.html')
 
 
-@bp.route('/user', methods=('GET', 'POST'))
+@bp.route('/user/<int:user_id>', methods=('GET', 'POST'))
 @login_required
-def user():
+def user(user_id):
     if request.method == 'POST':
         # Collect necessary data
-        user_id = request.args.get('user_id')
+        username = request.form.get('username')
         new_password = request.form.get('new_password')
         confirm_new_password = request.form.get('confirm_new_password')
+        new_privilege = request.form.get('new_privilege')
         message = None
 
         # Read existing user from db
         query = User.query.filter(
             User.user_id == user_id).first()
 
-        # Ensure new password is provided
-        if not new_password:
-            message = f'Please provide a new password for user.'
+        old_username = query.username
+        old_privilege = query.privilege
+
+        # Ensure username is provided
+        if not username:
+            message = f'Please provide a username.'
 
         # Verify spelling of new password
         if new_password != confirm_new_password:
@@ -165,20 +172,30 @@ def user():
                 method='pbkdf2:sha512',
                 salt_length=128)
 
-            # Update password in db
-            query.password = hashed_password
-            db_session.add(query)
-            db_session.commit()
+            # Update username, password, and privilege in db if submitted
+            if username and username != old_username:
+                query.username = username
+                flash(
+                    f'Username for {old_username} was updated to {username}.')
+            if new_password and new_password == confirm_new_password:
+                query.password = hashed_password
+                flash(
+                    f'Password for {username if username else old_username} updated.')
+            if new_privilege != 'Privilege...' and new_privilege != old_privilege:
+                query.privilege = new_privilege
+                flash(
+                    f'Privilege for {username if username else old_username} is updated from {old_privilege} to {new_privilege}.')
+            if username or new_password:
+                db_session.add(query)
+                db_session.commit()
 
             # Return to index page
-            flash(f'Password for user {query.username} was updated.')
             return redirect(url_for('index.index'))
 
         flash(message)
 
-    user_id = request.args.get('user_id')
     query = User.query.filter(User.user_id == user_id).first()
-    return render_template('admin/user.html', user=query)
+    return render_template('admin/user.html', user=query, levels=LEVELS)
 
 
 @bp.route('/users', methods=('GET', 'POST'))

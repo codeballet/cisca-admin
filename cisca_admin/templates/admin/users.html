@@ -15,6 +15,7 @@
             <thead>
                 <tr>
                     <th scope="col">Username</th>
+                    <th scope="col">Priviledge level</th>
                     <th scope="col">User ID</th>
                 </tr>
             </thead>
@@ -22,6 +23,7 @@
                 {% for user in users %}
                     <tr>
                         <td><a href="{{ url_for('admin.user', user_id=user.user_id) }}">{{ user.username }}</a></td>
+                        <td>{{ user.privilege }}</td>
                         <td>{{ user.user_id }}</td>
                     </tr>
                 {% endfor %}
