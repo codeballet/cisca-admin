@@ -31,20 +31,18 @@ class ChName(Base):
     __tablename__ = "ch_names"
     ch_id = Column(Integer, primary_key=True)
     ch_first = Column(String(50))
-    ch_middle = Column(String(50))
     ch_family = Column(String(50))
     person_id = Column(Integer, ForeignKey(
         'people.person_id', ondelete="CASCADE"))
 
     person = relationship("Person", back_populates="ch_name")
 
-    def __init__(self, ch_first=None, ch_middle=None, ch_family=None):
+    def __init__(self, ch_first=None, ch_family=None):
         self.ch_first = ch_first
-        self.ch_middle = ch_middle
         self.ch_family = ch_family
 
     def __repr__(self):
-        return f'<ChName {self.ch_first}, {self.ch_middle}, {self.ch_family}>'
+        return f'<ChName {self.ch_first}, {self.ch_family}>'
 
 
 class Image(Base):

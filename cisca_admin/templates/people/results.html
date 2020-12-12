@@ -45,9 +45,7 @@
                         </a>
                     </td>
                     <td>
-                        {% if row.ch_name.ch_family %}{{ row.ch_name.ch_family.capitalize() }} {% endif %}
-                        {% if row.ch_name.ch_first %}{{ row.ch_name.ch_first.capitalize() }} {% endif %}
-                        {% if row.ch_name.ch_middle %}{{ row.ch_name.ch_middle.capitalize() }}{% endif %}
+                        {% if row.ch_name.ch_family %}{{ row.ch_name.ch_family.capitalize() }}{% endif %}{% if row.ch_name.ch_first %}{{ row.ch_name.ch_first.capitalize() }}{% endif %}
                     </td>
                     <td>
                         {% if row.birth %}

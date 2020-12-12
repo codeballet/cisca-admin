@@ -29,8 +29,6 @@ def id(person_id):
 
         ch_first = None if not request.form.get(
             'ch_first') else request.form.get('ch_first').lower()
-        ch_middle = None if not request.form.get(
-            'ch_middle') else request.form.get('ch_middle').lower()
         ch_family = None if not request.form.get(
             'ch_family') else request.form.get('ch_family').lower()
 
@@ -94,18 +92,13 @@ def id(person_id):
             elif not query.ch_name and ch_first:
                 query.ch_name = ChName(ch_first=ch_first)
 
-            if query.ch_name and ch_middle != query.ch_name.ch_middle:
-                query.ch_name.ch_middle = ch_middle
-            elif not query.ch_name and ch_middle:
-                query.ch_name = ChName(ch_middle=ch_middle)
-
             if query.ch_name and ch_family != query.ch_name.ch_family:
                 query.ch_name.ch_family = ch_family
             elif not query.ch_name and ch_family:
                 query.ch_name = ChName(ch_family=ch_family)
 
             # Delete Chinese name entry if all fields empty
-            if query.ch_name and (not ch_first and not ch_middle and not ch_family):
+            if query.ch_name and (not ch_first and not ch_family):
                 db_session.delete(query.ch_name)
 
             # Compare and add a complete birthdate input

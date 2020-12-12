@@ -39,8 +39,6 @@ def new():
 
         ch_first = request.form.get(
             'ch_first') if request.form.get('ch_first') else None
-        ch_middle = request.form.get(
-            'ch_middle') if request.form.get('ch_middle') else None
         ch_family = request.form.get(
             'ch_family') if request.form.get('ch_family') else None
 
@@ -90,9 +88,9 @@ def new():
             new_person = Person(first_name=first_name, middle_name=middle_name,
                                 family_name=family_name, nickname=nickname)
 
-            if ch_first or ch_middle or ch_family:
+            if ch_first or ch_family:
                 new_person.ch_name = ChName(
-                    ch_first=ch_first, ch_middle=ch_middle, ch_family=ch_family)
+                    ch_first=ch_first, ch_family=ch_family)
 
             if birth_year and birth_month and birth_day:
                 new_person.birth = Birth(

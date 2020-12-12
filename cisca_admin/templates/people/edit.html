@@ -35,9 +35,6 @@
         <div class="form-group">
             <input autocomplete="off" type="text" class="form-control" id="edit_ch_first" name="ch_first" value="{% if person.ch_name.ch_first %}{{ person.ch_name.ch_first.capitalize() }}{% endif %}" placeholder="Chinese first name">
         </div>
-        <div class="form-group">
-            <input autocomplete="off" type="text" class="form-control" id="edit_ch_middle" name="ch_middle" value="{% if person.ch_name.ch_middle %}{{ person.ch_name.ch_middle.capitalize() }}{% endif %}" placeholder="Chinese middle name">
-        </div>
 
         <h6>Date of birth</h6>
         <div class="form-group">

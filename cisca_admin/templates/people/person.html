@@ -28,9 +28,7 @@
     {% if person.ch_name %}
         <h6>Chinese name:</h6>
         <p>
-            {% if person.ch_name.ch_family %}{{ person.ch_name.ch_family }} {% endif %}
-            {% if person.ch_name.ch_first %}{{ person.ch_name.ch_first.capitalize() }} {% endif %}
-            {% if person.ch_name.ch_middle %}{{ person.ch_name.ch_middle.capitalize() }}{% endif %}
+            {% if person.ch_name.ch_family %}{{ person.ch_name.ch_family.capitalize() }}{% endif %}{% if person.ch_name.ch_first %}{{ person.ch_name.ch_first.capitalize() }} {% endif %}
         </p>
     {% endif %}
 
