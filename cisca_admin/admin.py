@@ -74,7 +74,7 @@ def register():
                 salt_length=128)
 
             # Add new user to db
-            new_user = User(username=username,
+            new_user = User(username=username.lower(),
                             password=hashed_password,
                             privilege=privilege)
             db_session.add(new_user)

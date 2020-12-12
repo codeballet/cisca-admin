@@ -38,7 +38,14 @@ def login():
         password = request.form.get('password')
         message = None
 
-        user = User.query.filter(User.username == username).first()
+        if not username:
+            message = 'Please enter a username.'
+
+        if not password:
+            message = 'Please enter a password.'
+
+        if username:
+            user = User.query.filter(User.username == username.lower()).first()
 
         if user is None:
             message = 'Incorrect username.'
