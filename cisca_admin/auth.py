@@ -48,6 +48,7 @@ def login():
         elif message is None:
             session.clear()
             session['user_id'] = user.user_id
+            session['privilege'] = user.privilege
 
             return redirect(url_for('index.index'))
 

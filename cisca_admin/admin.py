@@ -156,6 +156,11 @@ def user(user_id):
         old_username = query.username
         old_privilege = query.privilege
 
+        # Stop users from changing root user
+        if query.privilege == 11 and session.get('privilege') != 11:
+            flash("I'm sorry, but you cannot update that user!")
+            return redirect(url_for('admin.users'))
+
         # Ensure username is provided
         if not username:
             message = f'Please provide a username.'
