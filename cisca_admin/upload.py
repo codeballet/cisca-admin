@@ -46,7 +46,7 @@ def id(person_id):
 
             # Check if person already has an image
             query = Person.query.options(selectinload(
-                Person.image)).filter(Person.person_id).first()
+                Person.image)).filter(Person.person_id == person_id).first()
             if query.image:
                 # If person already has image, return to person page
                 flash(
