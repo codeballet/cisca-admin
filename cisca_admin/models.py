@@ -1,8 +1,21 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import ForeignKey, Column, Integer, String, Table
 from sqlalchemy.orm import relationship
 from cisca_admin.db import db_session, Base
 
 
+# Many to Many association tables
+people_countries = Table(
+    'people_countries', Base.metadata,
+    Column('person_id',
+           ForeignKey('people.person_id'),
+           primary_key=True),
+    Column('country_id',
+           ForeignKey('countries.country_id'),
+           primary_key=True)
+)
+
+
+# Model classes
 class Birth(Base):
     query = db_session.query_property()
 
@@ -52,6 +65,11 @@ class Country(Base):
     country_id = Column(Integer, primary_key=True)
     country_name = Column(String, unique=True, nullable=False)
 
+    people = relationship(
+        'Person',
+        secondary=people_countries,
+        back_populates='countries')
+
     def __init__(self, country_name=None):
         self.country_name = country_name
 
@@ -65,8 +83,10 @@ class Image(Base):
     __tablename__ = 'images'
     image_id = Column(Integer, primary_key=True)
     image_file = Column(String(10), unique=True, nullable=False)
-    person_id = Column(Integer,
-                       ForeignKey('people.person_id', ondelete="CASCADE"))
+    person_id = Column(
+        Integer,
+        ForeignKey('people.person_id', ondelete="CASCADE")
+    )
 
     person = relationship("Person", back_populates="image")
 
@@ -84,9 +104,10 @@ class IstdNumber(Base):
     __tablename__ = 'istd_numbers'
     istd_id = Column(Integer, primary_key=True)
     istd_pin = Column(String(10), unique=True, nullable=False)
-    person_id = Column(Integer, ForeignKey(
-        'people.person_id', ondelete="CASCADE"
-    ))
+    person_id = Column(
+        Integer,
+        ForeignKey('people.person_id', ondelete="CASCADE")
+    )
 
     person = relationship("Person", back_populates="istd_number")
 
@@ -153,11 +174,15 @@ class Person(Base):
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )
-
     rad_number = relationship(
         "RadNumber", uselist=False,
         back_populates="person",
         cascade="all, delete, delete-orphan"
+    )
+    countries = relationship(
+        'Country',
+        secondary=people_countries,
+        back_populates='people'
     )
 
     def __init__(self, first_name=None, middle_name=None, family_name=None, nickname=None):
