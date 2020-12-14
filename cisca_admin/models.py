@@ -45,6 +45,20 @@ class ChName(Base):
         return f'<ChName {self.ch_first}, {self.ch_family}>'
 
 
+class Country(Base):
+    query = db_session.query_property()
+
+    __tablename__ = "countries"
+    country_id = Column(Integer, primary_key=True)
+    country_name = Column(String, unique=True, nullable=False)
+
+    def __init__(self, country_name=None):
+        self.country_name = country_name
+
+    def __repr__(self):
+        return f'<Country {self.country_name}>'
+
+
 class Image(Base):
     query = db_session.query_property()
 

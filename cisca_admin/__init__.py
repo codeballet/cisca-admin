@@ -49,6 +49,11 @@ def create_app(test_config=None):
 
     init_db()
 
+    # Command line apps
+    from . import click_countries
+    app.cli.add_command(click_countries.countries)
+
+    # Blueprints
     from . import admin
     app.register_blueprint(admin.bp)
 
