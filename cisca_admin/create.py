@@ -95,10 +95,8 @@ def new():
                     ch_first=ch_first, ch_family=ch_family)
 
             if country:
-                new_country = Country(country_name=country)
-                db_session.add(new_country)
-                new_person.countries.append(new_country)
-                new_country.people.append(new_person)
+                add_country = Country.query.filter(Country.country_name == country)
+                add_country.person = new_person
 
             if birth_year and birth_month and birth_day:
                 new_person.birth = Birth(

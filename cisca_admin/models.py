@@ -3,21 +3,6 @@ from sqlalchemy.orm import relationship
 from cisca_admin.db import db_session, Base
 
 
-# Many to Many association tables
-class PersonCountry(Base):
-    query = db_session.query_property()
-
-    __tablename__ = 'people_countries'
-    person_id = Column(
-        Integer,
-        ForeignKey('people.person_id'),
-        primary_key=True)
-    country_id = Column(
-        Integer,
-        ForeignKey('countries.country_id'),
-        primary_key=True)
-
-
 # Model classes
 class Birth(Base):
     query = db_session.query_property()
@@ -68,10 +53,7 @@ class Country(Base):
     country_id = Column(Integer, primary_key=True)
     country_name = Column(String, unique=True, nullable=False)
 
-    people = relationship(
-        'Person',
-        secondary='people_countries',
-        back_populates='countries')
+    person = relationship('Person', back_populates='country')
 
     def __init__(self, country_name=None):
         self.country_name = country_name
@@ -151,6 +133,10 @@ class Person(Base):
     middle_name = Column(String(50))
     family_name = Column(String(50), nullable=False)
     nickname = Column(String(50))
+    country_id = Column(
+        Integer, 
+        ForeignKey('countries.country_id')
+    )
 
     birth = relationship(
         "Birth", uselist=False,
@@ -161,6 +147,10 @@ class Person(Base):
         "ChName", uselist=False,
         back_populates="person",
         cascade="all, delete, delete-orphan"
+    )
+    country = relationship(
+        'Country',
+        back_populates='person'
     )
     image = relationship(
         "Image", uselist=False,
@@ -182,11 +172,7 @@ class Person(Base):
         back_populates="person",
         cascade="all, delete, delete-orphan"
     )
-    countries = relationship(
-        'Country',
-        secondary='people_countries',
-        back_populates='people'
-    )
+
 
     def __init__(self, first_name=None, middle_name=None, family_name=None, nickname=None):
         self.first_name = first_name
