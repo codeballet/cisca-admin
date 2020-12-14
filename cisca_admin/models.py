@@ -4,15 +4,18 @@ from cisca_admin.db import db_session, Base
 
 
 # Many to Many association tables
-people_countries = Table(
-    'people_countries', Base.metadata,
-    Column('person_id',
-           ForeignKey('people.person_id'),
-           primary_key=True),
-    Column('country_id',
-           ForeignKey('countries.country_id'),
-           primary_key=True)
-)
+class PersonCountry(Base):
+    query = db_session.query_property()
+
+    __tablename__ = 'people_countries'
+    person_id = Column(
+        Integer,
+        ForeignKey('people.person_id'),
+        primary_key=True)
+    country_id = Column(
+        Integer,
+        ForeignKey('countries.country_id'),
+        primary_key=True)
 
 
 # Model classes
@@ -67,7 +70,7 @@ class Country(Base):
 
     people = relationship(
         'Person',
-        secondary=people_countries,
+        secondary='people_countries',
         back_populates='countries')
 
     def __init__(self, country_name=None):
@@ -181,7 +184,7 @@ class Person(Base):
     )
     countries = relationship(
         'Country',
-        secondary=people_countries,
+        secondary='people_countries',
         back_populates='people'
     )
 

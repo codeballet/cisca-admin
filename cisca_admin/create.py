@@ -8,7 +8,7 @@ from sqlalchemy.orm import selectinload
 
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
-from cisca_admin.models import Birth, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
+from cisca_admin.models import Birth, Country, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
 
 bp = Blueprint('create', __name__, url_prefix='/create')
 
@@ -41,6 +41,8 @@ def new():
             'ch_first') if request.form.get('ch_first') else None
         ch_family = request.form.get(
             'ch_family') if request.form.get('ch_family') else None
+
+        country = request.form.get('nationality')
 
         birth_year = request.form.get(
             'birth_year') if request.form.get('birth_year') else None
@@ -92,6 +94,12 @@ def new():
                 new_person.ch_name = ChName(
                     ch_first=ch_first, ch_family=ch_family)
 
+            if country:
+                new_country = Country(country_name=country)
+                db_session.add(new_country)
+                new_person.countries.append(new_country)
+                new_country.people.append(new_person)
+
             if birth_year and birth_month and birth_day:
                 new_person.birth = Birth(
                     birth_year=birth_year, birth_month=birth_month, birth_day=birth_day)
@@ -112,4 +120,6 @@ def new():
 
         flash(message)
 
-    return render_template('people/create.html')
+    # Get the list of countries from db
+    query = Country.query
+    return render_template('people/create.html', countries=query)
