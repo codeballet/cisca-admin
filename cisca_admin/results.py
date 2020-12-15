@@ -9,7 +9,7 @@ from flask_paginate import Pagination, get_page_args
 
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
-from cisca_admin.models import Birth, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
+from cisca_admin.models import Birth, Country, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
 
 bp = Blueprint('results', __name__, url_prefix='/results')
 
@@ -74,7 +74,8 @@ def table():
             options(selectinload(Person.ch_name)).\
             options(selectinload(Person.passport)).\
             options(selectinload(Person.rad_number)).\
-            options(selectinload(Person.istd_number))
+            options(selectinload(Person.istd_number)).\
+            options(selectinload(Country.country_name))
     else:
         # No form fields completed
         message = 'Please fill in all the search fields.'

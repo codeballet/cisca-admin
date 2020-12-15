@@ -17,6 +17,7 @@
                 <th scope="col">Nickname</th>
                 <th scope="col">English Name</th>
                 <th scope="col">Chinese Name</th>
+                <th scope="col">Nationality</th>
                 <th scope="col">Birthdate</th>
                 <th scope="col">Passport</th>
                 <th scope="col">RAD PIN</th>
@@ -46,6 +47,9 @@
                     </td>
                     <td>
                         {% if row.ch_name.ch_family %}{{ row.ch_name.ch_family.capitalize() }}{% endif %}{% if row.ch_name.ch_first %}{{ row.ch_name.ch_first.capitalize() }}{% endif %}
+                    </td>
+                    <td>
+                        {% if row.country %}{{ row.country.country_name }}{% endif %}
                     </td>
                     <td>
                         {% if row.birth %}
