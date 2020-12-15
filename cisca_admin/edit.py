@@ -9,7 +9,7 @@ from sqlalchemy.orm import selectinload
 
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
-from cisca_admin.models import Birth, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
+from cisca_admin.models import Birth, Country, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
 
 
 bp = Blueprint('edit', __name__, url_prefix='/edit')
@@ -31,6 +31,8 @@ def id(person_id):
             'ch_first') else request.form.get('ch_first').lower()
         ch_family = None if not request.form.get(
             'ch_family') else request.form.get('ch_family').lower()
+        
+        country = request.form.get('country')
 
         birth_year = request.form.get(
             'birth_year') if request.form.get('birth_year') else None
@@ -74,6 +76,7 @@ def id(person_id):
                 options(selectinload(Person.passport)).\
                 options(selectinload(Person.rad_number)).\
                 options(selectinload(Person.istd_number)).\
+                options(selectinload(Person.countries)).\
                 filter(Person.person_id == person_id).first()
 
             # Add English name input
@@ -100,6 +103,12 @@ def id(person_id):
             # Delete Chinese name entry if all fields empty
             if query.ch_name and (not ch_first and not ch_family):
                 db_session.delete(query.ch_name)
+
+            # Add nationalities input
+            if country:
+                changed_country = Country.query.filter(Country.country_name == country).first()
+                query.countries.pop()
+                query.countries.append(changed_country)
 
             # Compare and add a complete birthdate input
             if birth_year and birth_month and birth_day:
@@ -152,13 +161,15 @@ def id(person_id):
 
         flash(message)
 
-    query = Person.query.\
+    person = Person.query.\
         options(selectinload(Person.birth)).\
         options(selectinload(Person.image)).\
         options(selectinload(Person.ch_name)).\
         options(selectinload(Person.passport)).\
         options(selectinload(Person.rad_number)).\
         options(selectinload(Person.istd_number)).\
+        options(selectinload(Person.countries)).\
         filter(Person.person_id == person_id).first()
 
-    return render_template('people/edit.html', person=query)
+    countries = Country.query
+    return render_template('people/edit.html', person=person, countries=countries)

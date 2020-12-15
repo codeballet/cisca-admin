@@ -96,6 +96,10 @@ def new():
                 new_person.ch_name = ChName(
                     ch_first=ch_first, ch_family=ch_family)
 
+            if country:
+                new_country = Country.query.filter(Country.country_name == country).first()
+                new_person.countries.append(new_country)
+
             if birth_year and birth_month and birth_day:
                 new_person.birth = Birth(
                     birth_year=birth_year, birth_month=birth_month, birth_day=birth_day)
@@ -108,12 +112,6 @@ def new():
 
             if istd_pin:
                 new_person.istd_number = IstdNumber(istd_pin=istd_pin)
-
-            print(f'country: {country}')
-            if country:
-                new_country = Country.query.filter(Country.country_name == country).first()
-                print(f'new_country: {new_country}')
-                new_person.countries.append(new_country)
 
             db_session.add(new_person)
             db_session.commit()
