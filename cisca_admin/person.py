@@ -22,6 +22,7 @@ def id(person_id):
         options(selectinload(Person.passport)).\
         options(selectinload(Person.rad_number)).\
         options(selectinload(Person.istd_number)).\
+        options(selectinload(Person.countries)).\
         filter(Person.person_id == person_id).first()
 
     return render_template('people/person.html', person=query)

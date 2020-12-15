@@ -32,6 +32,13 @@
         </p>
     {% endif %}
 
+    {% if person.countries %}
+        <h6>Nationalities:</h6>
+        {% for country in person.countries %}
+            <p>{{ country.country_name }}</p>
+        {% endfor %}
+    {% endif %}
+
     {% if person.birth %}
         <h6>Date of birth:</h6>
         <p>{{ person.birth.birth_year }}-{{ person.birth.birth_month }}-{{ person.birth.birth_day }}</p>
