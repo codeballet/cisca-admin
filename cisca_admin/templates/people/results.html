@@ -49,7 +49,11 @@
                         {% if row.ch_name.ch_family %}{{ row.ch_name.ch_family.capitalize() }}{% endif %}{% if row.ch_name.ch_first %}{{ row.ch_name.ch_first.capitalize() }}{% endif %}
                     </td>
                     <td>
-                        {% if row.country %}{{ row.country.country_name }}{% endif %}
+                        {% if row.countries %}
+                            {% for country in row.countries %}
+                            <p>{{ country.country_name }}</p>
+                            {% endfor %}
+                        {% endif %}
                     </td>
                     <td>
                         {% if row.birth %}

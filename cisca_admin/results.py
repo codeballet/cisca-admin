@@ -75,7 +75,7 @@ def table():
             options(selectinload(Person.passport)).\
             options(selectinload(Person.rad_number)).\
             options(selectinload(Person.istd_number)).\
-            options(selectinload(Country.country_name))
+            options(selectinload(Person.countries))
     else:
         # No form fields completed
         message = 'Please fill in all the search fields.'
