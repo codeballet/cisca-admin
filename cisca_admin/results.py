@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, redirect, render_template, request, session, url_for
+    Blueprint, flash, redirect, render_template, request, send_file, session, url_for
 )
 
 from sqlalchemy import and_
@@ -10,6 +10,7 @@ from flask_paginate import Pagination, get_page_args
 from cisca_admin.auth import login_required
 from cisca_admin.db import db_session
 from cisca_admin.models import Birth, Country, Image, IstdNumber, ChName, Passport, Person, RadNumber, User
+
 
 bp = Blueprint('results', __name__, url_prefix='/results')
 

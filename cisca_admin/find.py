@@ -32,4 +32,4 @@ def terms():
         flash('I could not find anyone.')
         return redirect(url_for('index.index'))
 
-    return redirect(url_for(index.index))
+    return redirect(url_for('index.index'))

@@ -16,7 +16,8 @@ def create_app(test_config=None):
         SESSION_TYPE='filesystem',
         SESSION_PERMANENT=False,
         TEMPLATES_AUTO_RELOAD=True,
-        UPLOAD_FOLDER=os.path.abspath('cisca_admin/static/images')
+        UPLOAD_FOLDER=os.path.abspath('cisca_admin/static/images'),
+        DOWNLOAD_FOLDER=os.path.abspath('cisca_admin/static/downloads')
     )
 
     if test_config is None:
@@ -62,6 +63,9 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+
+    from . import backup
+    app.register_blueprint(backup.bp)
 
     from . import create
     app.register_blueprint(create.bp)

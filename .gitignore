@@ -1,5 +1,7 @@
 venv/
 
+results.csv
+
 *.jpg
 *.jpeg
 *.pyc

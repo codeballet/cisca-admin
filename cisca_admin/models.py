@@ -5,9 +5,11 @@ from cisca_admin.db import db_session, Base
 
 # association tables
 people_countries = Table('people_countries', Base.metadata,
-    Column('person_id', ForeignKey('people.person_id'), primary_key=True),
-    Column('country_id', ForeignKey('countries.country_id'), primary_key=True)
-)
+                         Column('person_id', ForeignKey(
+                             'people.person_id'), primary_key=True),
+                         Column('country_id', ForeignKey(
+                             'countries.country_id'), primary_key=True)
+                         )
 
 
 # Model classes
@@ -132,7 +134,7 @@ class Passport(Base):
         self.person_id = person_id
 
     def __repr__(self):
-        return f'<Passport {self.passport_no}, {self.person_id}>'
+        return f'<Passport {self.passport_no}>'
 
 
 class Person(Base):

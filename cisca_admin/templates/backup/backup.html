@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Backup
+{% endblock %}
+
+{% block main %}
+    <h5>Download CSV file with everyone:</h5>
+    <form action="{{ url_for('backup.download') }}" method="POST">
+        <div class="form-group">
+            <input class="find-everyone" name="backup" value="backup">
+            <button class="btn btn-primary" type="submit">Get download</button>
+        </div>
+    </form>
+{% endblock %}
