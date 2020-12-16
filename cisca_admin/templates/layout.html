@@ -29,6 +29,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('create.new') }}">Create</a>
               </li>
+              <li>
+                <a class="nav-link" href="{{ url_for('backup.download') }}">Download</a>
+              </li>
             </ul>
             <ul class="navbar-nav ml-auto mt-2">
               {% if g.user.privilege >= 9 %}
@@ -36,9 +39,6 @@
                   <a class="nav-link" href="{{ url_for('admin.users') }}">Admin</a>
                 </li>
               {% endif %}
-              <li>
-                <a class="nav-link" href="{{ url_for('backup.download') }}">Download</a>
-              </li>
               <li>
                 <a class="nav-link" href="{{ url_for('admin.settings') }}">Settings</a>
               </li>
