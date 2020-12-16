@@ -47,7 +47,7 @@ def download():
             writer = csv.writer(r)
 
             writer.writerow(
-                ['nickname', 'firstname', 'familyname', 'CHfamily', 'CHfirst', 'birthyear', 'birthmonth', 'birthday', 'nationality', 'passport', 'rad_number', 'istd_number'])
+                ['nickname', 'firstname', 'middlename', 'familyname', 'CHfamily', 'CHfirst', 'birthyear', 'birthmonth', 'birthday', 'nationality', 'passport', 'rad_number', 'istd_number'])
 
             for row in query:
                 birth_year = None if not row.birth else row.birth.birth_year
@@ -71,7 +71,7 @@ def download():
                 istd_number = None if not row.istd_number else row.istd_number.istd_pin
 
                 writer.writerow(
-                    [row.nickname, row.first_name, row.family_name, chinese_family, chinese_first, birth_year, birth_month, birth_day, nationality, passport, rad_number, istd_number])
+                    [row.nickname, row.first_name, row.middle_name, row.family_name, chinese_family, chinese_first, birth_year, birth_month, birth_day, nationality, passport, rad_number, istd_number])
 
         return send_file(path, as_attachment=True)
 
