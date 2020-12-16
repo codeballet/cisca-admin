@@ -47,11 +47,31 @@ def download():
             writer = csv.writer(r)
 
             writer.writerow(
-                ['nickname', 'firstname', 'familyname', 'chinese_names', 'birth', 'nationality', 'passport', 'rad_number', 'istd_number'])
+                ['nickname', 'firstname', 'familyname', 'CHfamily', 'CHfirst', 'birthyear', 'birthmonth', 'birthday', 'nationality', 'passport', 'rad_number', 'istd_number'])
 
             for row in query:
+                birth_year = None if not row.birth else row.birth.birth_year
+                birth_month = None if not row.birth else row.birth.birth_month
+                birth_day = None if not row.birth else row.birth.birth_day
+
+                chinese_family = None
+                chinese_first = None
+                if row.ch_name:
+                    chinese_family = None if not row.ch_name.ch_family else row.ch_name.ch_family
+                    chinese_first = None if not row.ch_name.ch_first else row.ch_name.ch_first
+
+                if row.countries:
+                    for country in row.countries:
+                        nationality = country.country_name
+                else:
+                    nationality = None
+
+                passport = None if not row.passport else row.passport.passport_no
+                rad_number = None if not row.rad_number else row.rad_number.rad_pin
+                istd_number = None if not row.istd_number else row.istd_number.istd_pin
+
                 writer.writerow(
-                    [row.nickname, row.first_name, row.family_name, row.ch_name, row.birth, row.countries, row.passport, row.rad_number, row.istd_number])
+                    [row.nickname, row.first_name, row.family_name, chinese_family, chinese_first, birth_year, birth_month, birth_day, nationality, passport, rad_number, istd_number])
 
         return send_file(path, as_attachment=True)
 
