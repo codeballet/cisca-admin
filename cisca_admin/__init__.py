@@ -53,6 +53,9 @@ def create_app(test_config=None):
     from . import click_countries
     app.cli.add_command(click_countries.countries)
 
+    from . import click_student_info
+    app.cli.add_command(click_student_info.student_info)
+
     # Blueprints
     from . import admin
     app.register_blueprint(admin.bp)
