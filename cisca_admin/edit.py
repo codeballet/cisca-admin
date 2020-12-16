@@ -31,7 +31,7 @@ def id(person_id):
             'ch_first') else request.form.get('ch_first').lower()
         ch_family = None if not request.form.get(
             'ch_family') else request.form.get('ch_family').lower()
-        
+
         country = request.form.get('country')
 
         birth_year = request.form.get(
@@ -106,8 +106,10 @@ def id(person_id):
 
             # Add nationalities input
             if country:
-                changed_country = Country.query.filter(Country.country_name == country).first()
-                query.countries.pop()
+                changed_country = Country.query.filter(
+                    Country.country_name == country).first()
+                if query.countries:
+                    query.countries.pop()
                 query.countries.append(changed_country)
 
             # Compare and add a complete birthdate input
