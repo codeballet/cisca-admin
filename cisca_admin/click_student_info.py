@@ -14,10 +14,10 @@ def student_info():
 
         for row in reader:
             person = Person(
-                first_name=row['firstname'],
-                middle_name=row['middlename'],
-                family_name=row['familyname'],
-                nickname=row['nickname']
+                first_name=row['firstname'].lower(),
+                middle_name=row['middlename'].lower(),
+                family_name=row['familyname'].lower(),
+                nickname=row['nickname'].lower()
             )
 
             country = row['nationality']
