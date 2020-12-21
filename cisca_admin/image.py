@@ -1,4 +1,6 @@
 import os
+import PIL
+
 
 from flask import (
     Blueprint, current_app, flash, redirect, render_template, request, session, url_for
@@ -18,10 +20,30 @@ bp = Blueprint('image', __name__, url_prefix='/image')
 @ login_required
 def id(person_id):
     if request.method == 'POST':
-        # image = Image.query.filter(Image.person_id == person_id).first()
+        # Get info about image
         person = Person.query.\
             options(selectinload(Person.image)).\
             filter(Person.person_id == person_id).first()
+
+        # rotate image
+        if request.form.get('rotate'):
+            if os.path.exists(os.path.join(
+                current_app.config['UPLOAD_FOLDER'], person.image.image_file)
+            ):
+                infile = os.path.join(current_app.config['UPLOAD_FOLDER'], person.image.image_file)
+
+                try:
+                    with PIL.Image.open(infile) as im:
+                        im.rotate(90)
+                        im.save(outfile)
+                except OSError:
+                    print("cannot rotate", infile)
+
+                return redirect(url_for('person.id', person_id=person_id))
+                
+            else:
+                print(
+                    f'The file {person.image.image_file} for {person.first_name.capitalize()} {person.family_name.capitalize()} does not exist.')
 
         # Delete image file
         if os.path.exists(os.path.join(
