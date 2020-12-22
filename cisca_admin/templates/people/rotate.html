@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Rotate
+{% endblock %}
+
+{% block main %}
+    <form action="{{ url_for('rotate.id', person_id=person.person_id) }}" method="POST">
+        <h4>Rotate image for {{ person.first_name.capitalize()}} {{ person.family_name.capitalize() }}</h4>
+        <div class="form-group">
+            <img src="../../static/images/{{ person.image.image_file }}" class="img-thumbnail rounded" alt="image thumbnail">
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="ccw" name="ccw">
+            <input class="btn btn-primary" type="submit" value="Save" name="save">
+            <input class="btn btn-primary" type="submit" value="cw" name="cw">
+        </div>
+    </form>
+{% endblock %}

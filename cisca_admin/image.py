@@ -25,27 +25,11 @@ def id(person_id):
             options(selectinload(Person.image)).\
             filter(Person.person_id == person_id).first()
 
-        # rotate image
+        # if rotate image, redirect
         if request.form.get('rotate'):
-            if os.path.exists(os.path.join(
-                current_app.config['UPLOAD_FOLDER'], person.image.image_file)
-            ):
-                infile = os.path.join(current_app.config['UPLOAD_FOLDER'], person.image.image_file)
+            return redirect(url_for('rotate.id', person_id=person_id))
 
-                try:
-                    with PIL.Image.open(infile) as im:
-                        im.rotate(90)
-                        im.save(outfile)
-                except OSError:
-                    print("cannot rotate", infile)
-
-                return redirect(url_for('person.id', person_id=person_id))
-                
-            else:
-                print(
-                    f'The file {person.image.image_file} for {person.first_name.capitalize()} {person.family_name.capitalize()} does not exist.')
-
-        # Delete image file
+        # Delete existing image file
         if os.path.exists(os.path.join(
             current_app.config['UPLOAD_FOLDER'], person.image.image_file)
         ):
@@ -54,10 +38,12 @@ def id(person_id):
         else:
             print(
                 f'The file {person.image.image_file} for {person.first_name.capitalize()} {person.family_name.capitalize()} does not exist.')
+            return redirect(url_for('person.id', person_id=person_id))
 
         db_session.delete(person.image)
         db_session.commit()
 
+        # redirections
         if request.form.get('delete'):
             flash(
                 f'Image for {person.first_name.capitalize()} {person.family_name.capitalize()} was deleted.')
