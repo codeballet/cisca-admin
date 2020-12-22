@@ -65,34 +65,48 @@ def id(person_id):
 
                 try:
                     with PIL.Image.open(infile_str) as im:
-                        png_file = ''
                         # If png, convert to jpg
+                        png_file = ''
+
                         if re.search("png$", filename):
                             im = im.convert("RGB")
 
                             # Change filename to *.jpg
                             filename_list = filename.split('.')
-                            print(
-                                f'filename_list before changing name: {filename_list[1]}')
                             filename_list[1] = 'jpg'
-                            print(
-                                f'filename_list after changing name: {filename_list[1]}')
                             filename = '.'.join(map(str, filename_list))
-                            print(f'filename: {filename}')
 
                             # Change infile_str path to contain jpg instad of png
                             png_file = infile_str
                             infile_str = re.sub("png", "jpg", infile_str)
 
+                        # Square the image
+                        width, height = im.size
+
+                        if width > height:
+                            delta = width - height
+                            left = int(delta/2)
+                            upper = 0
+                            right = height + left
+                            lower = height
+                        else:
+                            delta = height - width
+                            left = 0
+                            upper = int(delta/2)
+                            right = width
+                            lower = width + upper
+
+                        im = im.crop((left, upper, right, lower))
+
                         # Convert to thumbnail and save
-                        im.thumbnail(size)
+                        im.thumbnail(size, PIL.Image.ANTIALIAS)
                         im.save(infile_str, "JPEG")
 
                         # Delete png file if exist
                         if os.path.exists(png_file):
                             os.remove(png_file)
                         else:
-                            print("The file does not exist")
+                            print("The png file does not exist")
 
                         # Commit thumbnail to images table
                         new_image = Image(
@@ -101,7 +115,7 @@ def id(person_id):
                         db_session.commit()
 
                 except OSError:
-                    print(f'cannot create thumbnail for {infile_str}')
+                    print(f'Cannot create thumbnail for {infile_str}')
 
             query = Person.query.filter(
                 Person.person_id == person_id).first()
